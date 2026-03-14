@@ -3,284 +3,625 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#4A8C5A">
+<meta name="theme-color" content="#f7f3ee">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="식물정원">
-<title>나의 식물 정원</title>
+<title>식물 정원</title>
 <link rel="manifest" href="./manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
 <style>
-* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-body { font-family:'Noto Sans KR',sans-serif; background:#F8FAF8; color:#1A2E1A; min-height:100vh; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Noto Sans KR',sans-serif;background:#f7f3ee;color:#2c2018;display:flex;flex-direction:column;}
+#scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
 
-.header {
-  background:#fff; padding:52px 20px 16px;
-  border-bottom:1px solid #E8F0EA;
-  position:sticky; top:0; z-index:10;
+/* HEADER */
+.hdr{
+  background:#f7f3ee;
+  padding:52px 18px 10px;
+  position:sticky;top:0;z-index:20;
+  border-bottom:2px solid #e8dfc8;
+  display:flex;align-items:center;justify-content:space-between;
 }
-.header-title { font-size:20px; font-weight:600; }
-.header-sub { font-size:13px; color:#7A9A7A; margin-top:3px; }
-.urgent { color:#C85030; font-weight:500; }
-.ok-text { color:#3A7A4A; font-weight:500; }
+.hdr-title{font-family:'Press Start 2P';font-size:10px;color:#2c5f2e;letter-spacing:1px;}
+.hdr-right{text-align:right;}
+.hdr-date{font-family:'Press Start 2P';font-size:6px;color:#a09070;margin-bottom:3px;}
+.hdr-badge{
+  display:inline-block;
+  font-family:'Press Start 2P';font-size:6px;
+  padding:4px 8px;
+  border:2px solid;
+}
+.hdr-badge.ok{color:#2c5f2e;border-color:#7dc87e;background:#eaf7ea;}
+.hdr-badge.warn{color:#c0392b;border-color:#f0a0a0;background:#fff0ee;}
 
-.notif-bar {
-  margin:12px 16px 0; background:#FFF8EE;
-  border:1px solid #F0D8A0; border-radius:14px;
-  padding:12px 14px; display:none;
-  align-items:center; justify-content:space-between; gap:10px;
+/* GARDEN SCENE */
+.garden-wrap{
+  margin:12px 16px;
+  background:#fff;
+  border:2px solid #e0d5c0;
+  border-radius:4px;
+  overflow:hidden;
+  box-shadow:0 2px 0 #d0c5a8;
 }
-.notif-bar p { font-size:12px; color:#9A7A30; flex:1; }
-.notif-btn {
-  background:#D4A020; color:#fff; border:none; border-radius:10px;
-  padding:6px 12px; font-size:12px; font-weight:500;
-  font-family:inherit; cursor:pointer;
+.garden-top{
+  padding:8px 12px 6px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid #f0e8d4;
 }
+.garden-label{font-family:'Press Start 2P';font-size:7px;color:#5a7a3a;}
+.garden-stage{font-family:'Press Start 2P';font-size:6px;color:#a09070;}
+#gardenCanvas{display:block;width:100%;image-rendering:pixelated;}
 
-.list { padding:12px 16px 80px; }
+/* CHAR + INFO */
+.char-row{
+  margin:0 16px 12px;
+  background:#fff;
+  border:2px solid #e0d5c0;
+  border-radius:4px;
+  box-shadow:0 2px 0 #d0c5a8;
+  display:flex;align-items:flex-end;
+  overflow:hidden;
+}
+.char-left{
+  padding:10px 8px 10px 12px;
+  flex-shrink:0;
+}
+#charCanvas{display:block;image-rendering:pixelated;}
+.char-right{
+  flex:1;padding:12px 12px 12px 4px;min-width:0;
+}
+.char-name{font-family:'Press Start 2P';font-size:8px;color:#2c5f2e;line-height:1.5;margin-bottom:4px;}
+.char-sub{font-family:'Press Start 2P';font-size:6px;color:#8a7050;line-height:1.8;margin-bottom:10px;}
+.xp-lbl{font-family:'Press Start 2P';font-size:5px;color:#a09070;margin-bottom:4px;}
+.xp-bar{height:8px;background:#f0e8d4;border:2px solid #d0c5a8;overflow:hidden;}
+.xp-inner{height:100%;background:#7dc87e;transition:width .4s steps(10);}
 
-.card {
-  background:#fff; border-radius:18px; margin-bottom:10px;
-  border:1px solid #E8F0EA; overflow:hidden;
-  box-shadow:0 1px 6px rgba(74,140,90,0.06);
-  animation:fadeUp 0.4s ease both;
+/* ITEMS ROW */
+.items-row{
+  margin:0 16px 12px;
+  background:#fff;border:2px solid #e0d5c0;
+  border-radius:4px;box-shadow:0 2px 0 #d0c5a8;
+  padding:8px 10px 10px;
 }
-.card.late { border-color:#F5D5CC; box-shadow:0 2px 10px rgba(224,112,80,0.08); }
-.card.soon { border-color:#F0E0B0; }
+.items-ttl{font-family:'Press Start 2P';font-size:6px;color:#8a7050;margin-bottom:8px;letter-spacing:1px;}
+.items-slots{display:flex;gap:6px;}
+.isl{
+  flex:1;height:48px;
+  border:2px solid;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;
+}
+.isl.on{border-color:#7dc87e;background:#eaf7ea;}
+.isl.off{border-color:#e0d5c0;background:#f7f3ee;opacity:0.6;}
+.isl-em{font-size:20px;line-height:1;}
+.isl-n{font-family:'Press Start 2P';font-size:5px;color:#a09070;}
+.isl.on .isl-n{color:#5a7a3a;}
 
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(12px); }
-  to   { opacity:1; transform:translateY(0); }
-}
-
-.card-bar { height:3px; }
-.card-body { padding:16px 16px 14px; }
-
-.card-top { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-.card-icon {
-  width:46px; height:46px; border-radius:14px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:22px; flex-shrink:0;
-}
-.card-info { flex:1; min-width:0; }
-.card-name { font-size:15px; font-weight:600; }
-.card-en { font-size:12px; color:#9AB09A; margin-top:1px; }
-.card-badge {
-  font-size:12px; font-weight:600; padding:5px 12px;
-  border-radius:20px; white-space:nowrap; flex-shrink:0;
-}
-
-.card-tip {
-  font-size:12px; color:#6A8A6A; background:#F3F8F3;
-  border-radius:10px; padding:8px 12px; margin-bottom:10px;
-  border-left:3px solid #C0D8C0; line-height:1.5;
-}
-
-.chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
-.chip {
-  font-size:11px; color:#5A7A5A; background:#F0F6F0;
-  border:1px solid #D8EAD8; border-radius:8px; padding:3px 9px;
-}
-
-.progress-wrap { margin-bottom:12px; }
-.progress-labels {
-  display:flex; justify-content:space-between;
-  font-size:11px; color:#9AB09A; margin-bottom:4px;
-}
-.progress-track { height:5px; background:#EEF4EE; border-radius:10px; overflow:hidden; }
-.progress-fill { height:100%; border-radius:10px; transition:width 0.5s ease; }
-
-.btn-row { display:flex; gap:8px; }
-.btn-main {
-  flex:1; padding:11px; border-radius:13px; border:none;
-  color:#fff; font-size:14px; font-weight:600;
-  font-family:inherit; cursor:pointer; transition:opacity 0.15s;
-}
-.btn-main:active { opacity:0.82; }
-.btn-cal {
-  padding:11px 15px; border-radius:13px;
-  border:1px solid #C8DCC8; background:#fff;
-  color:#5A7A5A; font-size:16px; cursor:pointer;
-}
-
-.pick-box {
-  background:#F3F8F3; border-radius:14px; padding:14px;
-}
-.pick-label { font-size:13px; color:#4A6A4A; font-weight:500; margin-bottom:10px; }
-.pick-input {
-  width:100%; padding:10px 14px; border-radius:10px;
-  border:1.5px solid #C0D8C0; font-size:14px;
-  background:#fff; font-family:inherit; margin-bottom:8px;
-  outline:none; color:#1A2E1A;
-}
-.pick-input:focus { border-color:#4A8C5A; }
-.pick-btns { display:flex; gap:8px; }
-.pick-confirm {
-  flex:1; padding:10px; border-radius:12px; border:none;
-  background:#4A8C5A; color:#fff; font-size:13px; font-weight:600;
-  font-family:inherit; cursor:pointer;
-}
-.pick-cancel {
-  padding:10px 14px; border-radius:12px;
-  border:1px solid #C0D8C0; background:#fff;
-  color:#6A8A6A; font-size:13px; font-family:inherit; cursor:pointer;
+/* SECTION */
+.sec-lbl{
+  padding:10px 18px 6px;
+  font-family:'Press Start 2P';font-size:7px;color:#5a7a3a;letter-spacing:1px;
 }
 
-.toast {
-  position:fixed; bottom:28px; left:50%;
-  transform:translateX(-50%) translateY(20px);
-  background:#1A2E1A; color:#fff; font-size:13px; font-weight:500;
-  padding:11px 22px; border-radius:30px; white-space:nowrap;
-  box-shadow:0 4px 20px rgba(0,0,0,0.15); z-index:999;
-  opacity:0; transition:all 0.28s ease; pointer-events:none;
+/* PLANT CARD */
+.pcard{
+  margin:0 16px 8px;
+  background:#fff;
+  border:2px solid #e0d5c0;
+  border-radius:4px;
+  box-shadow:0 2px 0 #d0c5a8;
+  overflow:hidden;
 }
-.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+.pcard-stripe{height:3px;}
+.ps-ok{background:#7dc87e;}
+.ps-soon{background:#f0c040;}
+.ps-late{background:#f07060;}
+.ps-none{background:#d0c5a8;}
+
+.pcard-in{padding:12px;}
+.pc-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.pc-icon{
+  width:42px;height:42px;
+  border:2px solid #e0d5c0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+  background:#f7f3ee;
+}
+.pc-icon.ok{border-color:#7dc87e;background:#eaf7ea;}
+.pc-icon.soon{border-color:#f0c040;background:#fffbe8;}
+.pc-icon.late{border-color:#f07060;background:#fff0ee;}
+
+.pc-names{flex:1;min-width:0;}
+.pc-name{font-family:'Press Start 2P';font-size:8px;color:#2c2018;line-height:1.5;}
+.pc-en{font-size:11px;color:#a09070;margin-top:2px;}
+
+.pc-badge{
+  font-family:'Press Start 2P';font-size:6px;
+  padding:4px 8px;border:2px solid;flex-shrink:0;white-space:nowrap;
+}
+.pb-ok{color:#2c5f2e;border-color:#7dc87e;background:#eaf7ea;}
+.pb-soon{color:#8a6010;border-color:#f0c040;background:#fffbe8;}
+.pb-late{color:#8a2010;border-color:#f07060;background:#fff0ee;}
+.pb-none{color:#a09070;border-color:#d0c5a8;background:#f7f3ee;}
+
+.pc-tip{
+  font-size:11px;color:#6a5a40;
+  background:#f7f3ee;padding:7px 10px;margin-bottom:8px;
+  border-left:3px solid #b8d8a0;line-height:1.6;
+}
+.chips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;}
+.chip{font-family:'Press Start 2P';font-size:5px;color:#7a6040;border:2px solid #e0d5c0;padding:3px 6px;background:#f7f3ee;}
+
+.pg-wrap{margin-bottom:10px;}
+.pg-lbs{display:flex;justify-content:space-between;font-family:'Press Start 2P';font-size:5px;color:#a09070;margin-bottom:4px;}
+.pg-track{height:6px;background:#f0e8d4;border:2px solid #d0c5a8;overflow:hidden;}
+.pg-fill{height:100%;transition:width .4s steps(12);}
+.pgf-ok{background:#7dc87e;}
+.pgf-soon{background:#f0c040;}
+.pgf-late{background:#f07060;}
+
+.btn-row{display:flex;gap:6px;}
+.btnw{
+  flex:1;height:42px;border:2px solid;
+  font-family:'Press Start 2P';font-size:7px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:transform .08s steps(1),box-shadow .08s steps(1);
+  border-radius:2px;
+}
+.btnw:active{transform:translate(2px,2px);box-shadow:none!important;}
+.bw-ok{background:#4a9e4c;border-color:#2c5f2e;color:#fff;box-shadow:2px 2px 0 #2c5f2e;}
+.bw-soon{background:#e8a820;border-color:#b07810;color:#fff;box-shadow:2px 2px 0 #b07810;}
+.bw-late{background:#e85040;border-color:#a02820;color:#fff;box-shadow:2px 2px 0 #a02820;}
+.bw-none{background:#5a4a38;border-color:#3a2c1e;color:#fff;box-shadow:2px 2px 0 #3a2c1e;}
+.btn-cal{
+  width:42px;height:42px;border:2px solid #d0c5a8;background:#f7f3ee;
+  font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  box-shadow:2px 2px 0 #d0c5a8;flex-shrink:0;border-radius:2px;
+}
+.btn-cal:active{transform:translate(2px,2px);box-shadow:none;}
+
+.pkbox{background:#f7f3ee;border:2px solid #d0c5a8;padding:10px;}
+.pk-lbl{font-family:'Press Start 2P';font-size:6px;color:#5a7a3a;margin-bottom:7px;line-height:1.8;}
+.pk-in{width:100%;height:38px;padding:0 10px;border:2px solid #d0c5a8;background:#fff;font-size:14px;font-family:inherit;outline:none;margin-bottom:7px;}
+.pk-in:focus{border-color:#4a9e4c;}
+.pk-btns{display:flex;gap:6px;}
+.pk-ok{flex:1;height:36px;border:2px solid #2c5f2e;background:#4a9e4c;color:#fff;font-family:'Press Start 2P';font-size:6px;cursor:pointer;box-shadow:2px 2px 0 #2c5f2e;}
+.pk-ok:active{transform:translate(2px,2px);box-shadow:none;}
+.pk-no{height:36px;padding:0 10px;border:2px solid #d0c5a8;background:#f7f3ee;color:#a09070;font-family:'Press Start 2P';font-size:6px;cursor:pointer;}
+
+.bottom-space{height:40px;}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(16px);
+  background:#2c2018;color:#c8e8a0;
+  font-family:'Press Start 2P';font-size:7px;
+  padding:10px 16px;border:2px solid #4a9e4c;
+  box-shadow:3px 3px 0 #4a9e4c;
+  white-space:nowrap;z-index:999;
+  opacity:0;transition:all .2s steps(3);pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* UNLOCK */
+.ulbg{position:fixed;inset:0;z-index:998;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;}
+.ulbg.show{display:flex;}
+.ulbox{
+  background:#fff;border:3px solid #7dc87e;
+  box-shadow:5px 5px 0 #4a9e4c;
+  padding:20px;text-align:center;width:86%;max-width:290px;
+}
+.ul-ttl{font-family:'Press Start 2P';font-size:8px;color:#2c5f2e;margin-bottom:8px;line-height:1.8;}
+.ul-em{font-size:48px;margin:6px 0 10px;}
+.ul-desc{font-family:'Press Start 2P';font-size:6px;color:#6a5a40;line-height:2;margin-bottom:14px;}
+.ul-btn{width:100%;height:40px;border:2px solid #2c5f2e;background:#4a9e4c;color:#fff;font-family:'Press Start 2P';font-size:7px;cursor:pointer;box-shadow:2px 2px 0 #2c5f2e;}
+.ul-btn:active{transform:translate(2px,2px);box-shadow:none;}
+
+.notif-bar{
+  margin:0 16px 8px;background:#fff;border:2px solid #f0c040;
+  padding:10px 12px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 0 #e0b030;
+}
+.notif-bar p{font-family:'Press Start 2P';font-size:6px;color:#7a6010;flex:1;line-height:1.8;}
+.notif-btn{background:#e8a820;color:#fff;border:2px solid #b07810;padding:6px 10px;font-family:'Press Start 2P';font-size:6px;cursor:pointer;white-space:nowrap;}
 </style>
 </head>
 <body>
+<div id="scroll">
+  <div class="hdr">
+    <div class="hdr-title">🌿 식물 정원</div>
+    <div class="hdr-right">
+      <div class="hdr-date" id="hDate"></div>
+      <div class="hdr-badge" id="hBadge"></div>
+    </div>
+  </div>
 
-<div class="header">
-  <div class="header-title">나의 식물 정원 🌿</div>
-  <div class="header-sub" id="headerSub"></div>
+  <div class="garden-wrap">
+    <div class="garden-top">
+      <div class="garden-label" id="gardenLabel">나의 정원</div>
+      <div class="garden-stage" id="gardenStage"></div>
+    </div>
+    <canvas id="gardenCanvas" height="160"></canvas>
+  </div>
+
+  <div class="char-row">
+    <div class="char-left">
+      <canvas id="charCanvas" width="64" height="80"></canvas>
+    </div>
+    <div class="char-right">
+      <div class="char-name" id="charName">새싹 정원사</div>
+      <div class="char-sub" id="charSub">물을 주러 가요!</div>
+      <div class="xp-lbl" id="xpLbl">EXP 0/3</div>
+      <div class="xp-bar"><div class="xp-inner" id="xpFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="items-row">
+    <div class="items-ttl">▸ ITEMS</div>
+    <div class="items-slots" id="itemSlots"></div>
+  </div>
+
+  <div id="notifWrap"></div>
+  <div class="sec-lbl">▸ 내 식물</div>
+  <div id="plantList"></div>
+  <div class="bottom-space"></div>
 </div>
 
-<div class="notif-bar" id="notifBar">
-  <p>🔔 물주기 알림을 받아볼 수 있어요</p>
-  <button class="notif-btn" onclick="reqNotif()">알림 켜기</button>
+<div class="ulbg" id="ulbg">
+  <div class="ulbox">
+    <div class="ul-ttl">✨ ITEM GET!</div>
+    <div class="ul-em" id="ulEm"></div>
+    <div class="ul-desc" id="ulDesc"></div>
+    <button class="ul-btn" onclick="closeUl()">확인!</button>
+  </div>
 </div>
-
-<div class="list" id="plantList"></div>
 <div class="toast" id="toast"></div>
 
 <script>
-const PLANTS = [
-  { id:"asparagus", name:"아스파라거스", en:"Asparagus Fern", days:3, emoji:"🌾",
-    tip:"흙 표면이 마르면 바로 물주기. 촉촉한 상태를 유지해주세요." },
-  { id:"monstera", name:"몬스테라 스프루세아나", en:"Monstera Spruceana", days:7, emoji:"🌿",
-    tip:"잎이 처지면 물 부족 신호. 잎 분무도 좋아해요." },
-  { id:"albuca", name:"알부카 스피랄리스", en:"Albuca Spiralis", days:10, emoji:"🌀",
-    tip:"봄·가을 생장기엔 더 자주. 과습 주의!" },
-  { id:"fishbone", name:"피쉬본", en:"Fishbone Cactus", days:14, emoji:"🪴",
-    tip:"흙이 완전히 마른 후 물주기. 과습 금물!" },
-  { id:"ungdong", name:"웅동자금", en:"Bear's Paw", days:14, emoji:"🐾",
-    tip:"잎에 물 닿지 않게 주의! 아랫부분에만 주세요." },
-  { id:"goemaaok", name:"괴마옥", en:"Euphorbia Obesa", days:21, emoji:"🌵",
-    tip:"겨울엔 한 달에 1회. 건조하게 키우기." },
-  { id:"ujumok", name:"우주목", en:"Jade Plant", days:21, emoji:"💎",
-    tip:"잎이 쭈글거리면 물 부족 신호. 줄기 튼튼하게." },
+// ── DATA ──
+const PLANTS=[
+  {id:"asparagus",name:"아스파라거스",en:"Asparagus Fern",days:3,emoji:"🌾",tip:"흙 표면이 마르면 바로 물주기. 촉촉하게."},
+  {id:"monstera",name:"몬스테라",en:"Monstera Spruceana",days:7,emoji:"🌿",tip:"잎이 처지면 물 부족. 잎 분무도 좋아요."},
+  {id:"albuca",name:"알부카 스피랄리스",en:"Albuca Spiralis",days:10,emoji:"🌀",tip:"봄·가을 더 자주. 과습 주의!"},
+  {id:"fishbone",name:"피쉬본",en:"Fishbone Cactus",days:14,emoji:"🪴",tip:"흙 완전히 마른 후 물주기."},
+  {id:"ungdong",name:"웅동자금",en:"Bear's Paw",days:14,emoji:"🐾",tip:"잎에 물 닿지 않게! 아랫부분만."},
+  {id:"goemaaok",name:"괴마옥",en:"Euphorbia Obesa",days:21,emoji:"🌵",tip:"겨울엔 한 달 1회. 건조하게."},
+  {id:"ujumok",name:"우주목",en:"Jade Plant",days:21,emoji:"💎",tip:"잎 쭈글거리면 물 부족 신호."},
+];
+const ITEMS=[
+  {id:"watering",emoji:"🪣",name:"물조리개",desc:"물 3번 달성!\n물조리개 획득!",need:3},
+  {id:"hat",emoji:"🪖",name:"모자",desc:"물 8번 달성!\n정원사 모자 획득!",need:8},
+  {id:"gloves",emoji:"🧤",name:"장갑",desc:"물 15번 달성!\n원예 장갑 획득!",need:15},
+  {id:"apron",emoji:"👘",name:"앞치마",desc:"물 25번 달성!\n앞치마 획득!",need:25},
+  {id:"shovel",emoji:"⛏️",name:"삽",desc:"물 40번 달성!\n삽 획득!",need:40},
+];
+const LEVELS=[
+  {min:0,name:"새싹 정원사",sub:"물을 주러 가요!",next:3},
+  {min:3,name:"초보 가드너",sub:"잘하고 있어요!",next:8},
+  {min:8,name:"초록 손가락",sub:"식물이 좋아해요~",next:15},
+  {min:15,name:"정원사",sub:"진짜 정원사예요!",next:25},
+  {min:25,name:"그린 마스터",sub:"완벽한 정원!",next:40},
+  {min:40,name:"전설의 가드너",sub:"최고의 정원사!",next:9999},
 ];
 
-let log = {}, picking = null;
+let log={},totalW=0,prevUnlocked=[],picking=null;
+const toS=()=>new Date().toISOString().split("T")[0];
+const addD=(s,n)=>{const d=new Date(s);d.setDate(d.getDate()+n);return d.toISOString().split("T")[0];};
+const getDL=s=>{const a=new Date();a.setHours(0,0,0,0);const b=new Date(s);b.setHours(0,0,0,0);return Math.ceil((b-a)/864e5);};
+const fmt=s=>{if(!s)return"";const d=new Date(s);return`${d.getMonth()+1}/${d.getDate()}`;};
+const fmtF=s=>{if(!s)return"";const d=new Date(s);return`${d.getMonth()+1}월 ${d.getDate()}일`;};
+function load(){try{const d=JSON.parse(localStorage.getItem("pg_v5")||"{}");log=d.log||{};totalW=d.totalW||0;}catch{}}
+function save(){try{localStorage.setItem("pg_v5",JSON.stringify({log,totalW}));}catch{}}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400);}
+function unlocked(){return ITEMS.filter(i=>totalW>=i.need);}
+function checkUnlock(){
+  const now=unlocked().map(i=>i.id);
+  const n=now.filter(id=>!prevUnlocked.includes(id));
+  if(n.length){const it=ITEMS.find(i=>i.id===n[0]);document.getElementById("ulEm").textContent=it.emoji;document.getElementById("ulDesc").textContent=it.desc;document.getElementById("ulbg").classList.add("show");}
+  prevUnlocked=[...now];
+}
+function closeUl(){document.getElementById("ulbg").classList.remove("show");}
+function waterNow(id){log[id]=toS();totalW++;save();checkUnlock();picking=null;render();toast("💧 +1 EXP!");}
+function waterDate(id){const v=document.getElementById("di_"+id)?.value;if(v){log[id]=v;totalW++;save();checkUnlock();picking=null;render();toast(fmtF(v)+" 기록!");}}
+function togglePick(id){picking=picking===id?null:id;render();}
+async function reqNotif(){const r=await Notification.requestPermission();render();if(r==="granted")toast("🔔 알림 ON!");}
 
-const today = () => new Date().toISOString().split("T")[0];
-const addDays = (s,n) => { const d=new Date(s); d.setDate(d.getDate()+n); return d.toISOString().split("T")[0]; };
-const getDL = (s) => { const t=new Date(); t.setHours(0,0,0,0); const n=new Date(s); n.setHours(0,0,0,0); return Math.ceil((n-t)/864e5); };
-const fmt = (s) => { if(!s)return""; const d=new Date(s); return `${d.getMonth()+1}월 ${d.getDate()}일`; };
+// ── PIXEL DRAWING ──
+function px(ctx,x,y,c){ctx.fillStyle=c;ctx.fillRect(x,y,1,1);}
+function rect(ctx,x,y,w,h,c){ctx.fillStyle=c;ctx.fillRect(x,y,w,h);}
 
-function load() { try{ log=JSON.parse(localStorage.getItem("plantLog")||"{}"); }catch{log={};} }
-function save() { try{ localStorage.setItem("plantLog",JSON.stringify(log)); }catch{} }
+// Draw character on canvas (64x80, scale 2 → 128x160)
+function drawCharacter(canvas){
+  const S=2; canvas.width=64*S; canvas.height=80*S;
+  const ctx=canvas.getContext("2d"); ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.imageSmoothingEnabled=false; ctx.scale(S,S);
+  const ul=unlocked().map(i=>i.id);
 
-function showToast(msg) {
-  const t=document.getElementById("toast");
-  t.textContent=msg; t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),2200);
+  // shoes
+  rect(ctx,14,72,14,6,"#1e1208"); rect(ctx,36,72,14,6,"#1e1208");
+  rect(ctx,12,74,4,4,"#1e1208"); rect(ctx,50,74,4,4,"#1e1208");
+  // pants
+  rect(ctx,14,54,14,20,"#3a5080"); rect(ctx,36,54,14,20,"#3a5080");
+  rect(ctx,14,54,14,4,"#2a4070"); rect(ctx,36,54,14,4,"#2a4070");
+  // shirt
+  rect(ctx,10,30,44,26,"#4a9e4c");
+  rect(ctx,10,30,44,4,"#3a8e3c"); // collar shadow
+  rect(ctx,10,50,44,6,"#3a8e3c"); // bottom shadow
+  // apron
+  if(ul.includes("apron")){rect(ctx,18,32,28,24,"#fff8e8");rect(ctx,20,34,24,20,"#f0e8d0");}
+  // arms
+  rect(ctx,2,32,10,20,"#e0a870"); rect(ctx,52,32,10,20,"#e0a870");
+  // gloves
+  if(ul.includes("gloves")){rect(ctx,2,44,10,10,"#e05a3a");rect(ctx,52,44,10,10,"#e05a3a");}
+  // watering can (left hand)
+  if(ul.includes("watering")){
+    rect(ctx,-8,36,12,10,"#5a8abf"); rect(ctx,-8,34,6,4,"#5a8abf");
+    rect(ctx,4,44,4,2,"#5a8abf"); rect(ctx,6,46,2,2,"#5a8abf"); rect(ctx,8,48,2,2,"#5a8abf");
+  }
+  // shovel (right hand)
+  if(ul.includes("shovel")){
+    rect(ctx,62,18,4,46,"#9a7a40"); rect(ctx,60,14,8,8,"#5a5a6a"); rect(ctx,58,20,4,4,"#5a5a6a");
+  }
+  // neck
+  rect(ctx,26,24,12,8,"#e0a870");
+  // head
+  rect(ctx,12,2,40,26,"#f0c898");
+  rect(ctx,10,6,2,18,"#f0c898"); rect(ctx,52,6,2,18,"#f0c898"); // side
+  rect(ctx,12,26,40,2,"#d8a070"); // chin
+  // hair
+  rect(ctx,10,0,44,8,"#2c1808");
+  rect(ctx,8,2,4,14,"#2c1808"); rect(ctx,52,2,4,12,"#2c1808"); // sideburns
+  rect(ctx,10,6,2,4,"#2c1808");
+  // eyes
+  rect(ctx,18,12,6,6,"#2c1808"); rect(ctx,40,12,6,6,"#2c1808");
+  rect(ctx,20,12,2,2,"#fff"); rect(ctx,42,12,2,2,"#fff"); // shine
+  // brows
+  rect(ctx,18,10,8,2,"#2c1808"); rect(ctx,38,10,8,2,"#2c1808");
+  // nose
+  rect(ctx,30,18,4,2,"#d08060");
+  // mouth
+  rect(ctx,24,22,16,2,"#c06050"); rect(ctx,22,20,2,4,"#c06050"); rect(ctx,40,20,2,4,"#c06050");
+  // cheeks
+  rect(ctx,14,18,6,4,"rgba(240,140,120,0.45)"); rect(ctx,44,18,6,4,"rgba(240,140,120,0.45)");
+  // hat
+  if(ul.includes("hat")){
+    rect(ctx,8,0,48,6,"#b07018"); rect(ctx,14,-10,36,12,"#c88020"); rect(ctx,16,-12,32,4,"#c88020");
+    rect(ctx,20,-8,6,2,"#f0c040"); // band
+  }
 }
 
-function waterNow(id) { log[id]=today(); save(); picking=null; render(); showToast("💧 물줬어요!"); }
+// ── GARDEN SCENE ──
+// Stage based on totalW: 0=bare, 3=sprouts, 8=flowers, 15=bushes+flowers, 25=trees, 40=paradise
+function gardenStage(){
+  if(totalW>=40)return 5;
+  if(totalW>=25)return 4;
+  if(totalW>=15)return 3;
+  if(totalW>=8)return 2;
+  if(totalW>=3)return 1;
+  return 0;
+}
+const STAGE_NAMES=["황량한 땅","새싹이 돋아요","꽃이 피어요","정원이 자라요","나무가 자라요","낙원의 정원"];
 
-function waterDate(id) {
-  const v=document.getElementById("di_"+id)?.value;
-  if(v){ log[id]=v; save(); picking=null; render(); showToast("📅 "+fmt(v)+"으로 기록됐어요"); }
+function drawGarden(canvas){
+  const W=canvas.offsetWidth||360;
+  const S=2;
+  canvas.width=W; canvas.height=160;
+  const ctx=canvas.getContext("2d");
+  ctx.imageSmoothingEnabled=false;
+  const st=gardenStage();
+
+  // Sky gradient
+  const sky=ctx.createLinearGradient(0,0,0,80);
+  sky.addColorStop(0,"#c8e8f8"); sky.addColorStop(1,"#e8f4fc");
+  rect(ctx,0,0,W,90,sky);
+
+  // Sun
+  ctx.fillStyle="#f8d040"; ctx.beginPath(); ctx.arc(W-40,30,18,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle="#fce870"; ctx.beginPath(); ctx.arc(W-40,30,14,0,Math.PI*2); ctx.fill();
+
+  // Clouds
+  function cloud(x,y,s){
+    ctx.fillStyle="rgba(255,255,255,0.9)";
+    [[0,0,s*20,s*10],[s*14,-s*4,s*24,s*14],[s*32,0,s*20,s*10]].forEach(([cx,cy,cw,ch])=>{
+      ctx.beginPath();ctx.ellipse(x+cx+cw/2,y+cy+ch/2,cw/2,ch/2,0,0,Math.PI*2);ctx.fill();
+    });
+  }
+  cloud(30,16,1); cloud(150,22,0.8);
+
+  // Ground base
+  rect(ctx,0,90,W,70,"#8ab84a");       // grass
+  rect(ctx,0,105,W,55,"#7a5028");      // soil
+  rect(ctx,0,90,W,4,"#6a9a30");        // grass top edge
+  rect(ctx,0,104,W,4,"#5a3a18");       // soil top edge
+
+  // ── HOUSE ──
+  const hx=W/2-32, hy=44;
+  // foundation
+  rect(ctx,hx-4,88,72,8,"#b09878");
+  // walls
+  rect(ctx,hx,62,64,32,"#f0e4c8");
+  rect(ctx,hx,62,64,4,"#d8ccb0"); // wall top
+  rect(ctx,hx+2,64,60,28,"#e8d8b0");
+  // window left
+  rect(ctx,hx+6,68,16,16,"#a8d0e8"); rect(ctx,hx+6,68,16,2,"#d0b878"); rect(ctx,hx+6,68,2,16,"#d0b878"); rect(ctx,hx+14,68,2,16,"#d0b878"); rect(ctx,hx+6,76,16,2,"#d0b878");
+  // window right
+  rect(ctx,hx+42,68,16,16,"#a8d0e8"); rect(ctx,hx+42,68,16,2,"#d0b878"); rect(ctx,hx+42,68,2,16,"#d0b878"); rect(ctx,hx+50,68,2,16,"#d0b878"); rect(ctx,hx+42,76,16,2,"#d0b878");
+  // door
+  rect(ctx,hx+24,72,16,22,"#8a5830"); rect(ctx,hx+26,74,12,18,"#a06840"); rect(ctx,hx+34,82,3,3,"#d0a060"); // knob
+  // roof
+  ctx.fillStyle="#c04828";
+  ctx.beginPath();ctx.moveTo(hx-8,62);ctx.lineTo(hx+32,28);ctx.lineTo(hx+72,62);ctx.closePath();ctx.fill();
+  ctx.fillStyle="#a03020";
+  ctx.beginPath();ctx.moveTo(hx-8,62);ctx.lineTo(hx+32,28);ctx.lineTo(hx+32,32);ctx.lineTo(hx-4,62);ctx.closePath();ctx.fill();
+  // chimney
+  rect(ctx,hx+44,30,10,20,"#b09070"); rect(ctx,hx+42,28,14,6,"#c8a880");
+  if(st>=1){ctx.fillStyle="rgba(200,200,200,0.5)";ctx.beginPath();ctx.ellipse(hx+49,22,6,8,0,0,Math.PI*2);ctx.fill();}
+
+  // path
+  ctx.fillStyle="#d0b888";
+  [0,1,2].forEach(i=>{ctx.beginPath();ctx.ellipse(hx+32,95+i*8,8-i*2,3,0,0,Math.PI*2);ctx.fill();});
+
+  // ── GARDEN ELEMENTS by stage ──
+  function drawSmallTree(tx,ty,h,w,lc,dc){
+    rect(ctx,tx+w/2-2,ty+h,4,h*0.6,"#8a5a28");
+    ctx.fillStyle=lc;ctx.beginPath();ctx.ellipse(tx+w/2,ty+h/2,w/2,h/2,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=dc;ctx.beginPath();ctx.ellipse(tx+w/2-4,ty+h/2+2,w/3,h/3,0,0,Math.PI*2);ctx.fill();
+  }
+  function drawFlower(fx,fy,pc,cc){
+    [[0,-5],[4,-3],[4,3],[0,5],[-4,3],[-4,-3]].forEach(([dx,dy])=>{ctx.fillStyle=pc;ctx.beginPath();ctx.arc(fx+dx,fy+dy,3,0,Math.PI*2);ctx.fill();});
+    ctx.fillStyle=cc;ctx.beginPath();ctx.arc(fx,fy,3,0,Math.PI*2);ctx.fill();
+    rect(ctx,fx-1,fy+3,2,8,"#5a9a30");
+  }
+  function drawBush(bx,by,w,h,c1,c2){
+    ctx.fillStyle=c1;ctx.beginPath();ctx.ellipse(bx,by,w,h,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=c2;ctx.beginPath();ctx.ellipse(bx-4,by+2,w*0.7,h*0.7,0,0,Math.PI*2);ctx.fill();
+  }
+
+  if(st>=1){
+    // tiny sprouts left & right of house
+    [[hx-20,96],[hx-10,98],[hx+74,96],[hx+84,98]].forEach(([sx,sy])=>{
+      ctx.fillStyle="#5a9a30";ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx-4,sy-8);ctx.lineTo(sx+4,sy-8);ctx.closePath();ctx.fill();
+    });
+  }
+  if(st>=2){
+    // flowers left side
+    drawFlower(hx-28,92,"#f070a0","#f8e040");
+    drawFlower(hx-14,93,"#f0a020","#fff070");
+    // flowers right side
+    drawFlower(hx+78,92,"#a060e0","#f0f060");
+    drawFlower(hx+92,93,"#f07060","#fff8a0");
+    // small bushes
+    drawBush(hx-22,100,10,6,"#5aaa40","#4a9a30");
+    drawBush(hx+86,100,10,6,"#5aaa40","#4a9a30");
+  }
+  if(st>=3){
+    // more flowers
+    drawFlower(20,93,"#f8a0c0","#fff060");
+    drawFlower(40,91,"#60c0f0","#f8e040");
+    drawFlower(W-30,93,"#f06080","#ffee60");
+    drawFlower(W-50,91,"#c080f0","#fff880");
+    drawBush(30,100,14,8,"#4aaa38","#3a9a28");
+    drawBush(W-40,100,14,8,"#4aaa38","#3a9a28");
+    // sunflower
+    [[0,-7],[5,-5],[7,0],[5,5],[0,7],[-5,5],[-7,0],[-5,-5]].forEach(([dx,dy])=>{ctx.fillStyle="#f8c020";ctx.beginPath();ctx.arc(hx-36+dx,82+dy,3,0,Math.PI*2);ctx.fill();});
+    ctx.fillStyle="#5a3010";ctx.beginPath();ctx.arc(hx-36,82,4,0,Math.PI*2);ctx.fill();
+    rect(ctx,hx-37,86,2,10,"#5a9a30");
+  }
+  if(st>=4){
+    // trees on sides
+    drawSmallTree(10,66,28,32,"#4aaa38","#3a8a28");
+    drawSmallTree(W-54,66,28,32,"#3aaa58","#2a8a48");
+    drawSmallTree(hx-56,72,22,24,"#5aba48","#4aaa38");
+    drawSmallTree(hx+72,72,22,24,"#4ab848","#3aaa38");
+    // more flowers everywhere
+    [50,70,90].forEach((x,i)=>drawFlower(x,92+i%2,"#f8"+(i%2?"8060":"d040"),"#fff060"));
+    [W-60,W-80,W-100].forEach((x,i)=>drawFlower(x,92+i%2,"#"+(i%2?"a060e0":"f07060"),"#fff880"));
+  }
+  if(st>=5){
+    // big lush trees
+    drawSmallTree(2,50,44,50,"#3aaa48","#2a8a38");
+    drawSmallTree(W-62,50,44,50,"#48aa38","#388a28");
+    // rainbow arc
+    const colors=["rgba(255,80,80,0.3)","rgba(255,160,0,0.3)","rgba(255,230,0,0.3)","rgba(60,200,60,0.3)","rgba(60,130,255,0.3)","rgba(160,60,220,0.3)"];
+    colors.forEach((c,i)=>{ctx.strokeStyle=c;ctx.lineWidth=6-i*0.5;ctx.beginPath();ctx.arc(W/2,160,120+i*8,Math.PI,2*Math.PI);ctx.stroke();});
+    // butterflies
+    [[80,60],[W-80,55]].forEach(([bx,by])=>{
+      ctx.fillStyle="rgba(255,180,80,0.8)";
+      ctx.beginPath();ctx.ellipse(bx-4,by,5,3,Math.PI/4,0,Math.PI*2);ctx.fill();
+      ctx.beginPath();ctx.ellipse(bx+4,by,5,3,-Math.PI/4,0,Math.PI*2);ctx.fill();
+    });
+  }
+
+  // ground detail - grass tufts
+  for(let i=0;i<W;i+=12){
+    ctx.fillStyle=i%24===0?"#6aaa28":"#78b830";
+    ctx.beginPath();ctx.moveTo(i,90);ctx.lineTo(i+3,82);ctx.lineTo(i+6,90);ctx.closePath();ctx.fill();
+  }
 }
 
-function togglePick(id) { picking=picking===id?null:id; render(); }
+// ── RENDER ──
+function render(){
+  const d=new Date();
+  const wk=["SUN","MON","TUE","WED","THU","FRI","SAT"];
+  document.getElementById("hDate").textContent=`${d.getMonth()+1}/${d.getDate()} ${wk[d.getDay()]}`;
+  const urg=PLANTS.filter(p=>{const l=log[p.id];return!l||getDL(addD(l,p.days))<=0;});
+  const b=document.getElementById("hBadge");
+  if(urg.length>0){b.className="hdr-badge warn";b.textContent=`⚠ ${urg.length}개 필요`;}
+  else{b.className="hdr-badge ok";b.textContent="✓ ALL OK";}
 
-function updateHeader() {
-  const urgent=PLANTS.filter(p=>{ const l=log[p.id]; return !l||getDL(addDays(l,p.days))<=0; }).length;
-  document.getElementById("headerSub").innerHTML = urgent>0
-    ? `오늘 ${fmt(today())} · <span class="urgent">${urgent}개 물주기 필요해요</span>`
-    : `오늘 ${fmt(today())} · <span class="ok-text">모든 식물 괜찮아요 ✓</span>`;
-}
+  // Garden
+  const gc=document.getElementById("gardenCanvas");
+  drawGarden(gc);
+  document.getElementById("gardenStage").textContent=STAGE_NAMES[gardenStage()];
 
-function render() {
-  updateHeader();
+  // Character
+  drawCharacter(document.getElementById("charCanvas"));
+
+  // Level
+  const lv=[...LEVELS].reverse().find(l=>totalW>=l.min)||LEVELS[0];
+  const nxt=LEVELS.find(l=>l.min>totalW);
+  const pct=nxt?Math.min(100,((totalW-lv.min)/(nxt.min-lv.min))*100):100;
+  document.getElementById("charName").textContent=lv.name;
+  document.getElementById("charSub").textContent=lv.sub;
+  document.getElementById("xpLbl").textContent=nxt?`EXP ${totalW}/${nxt.min}`:"MAX LV!";
+  document.getElementById("xpFill").style.width=pct+"%";
+
+  // Items
+  const slots=document.getElementById("itemSlots");
+  slots.innerHTML="";
+  ITEMS.forEach(it=>{
+    const on=totalW>=it.need;
+    const s=document.createElement("div");
+    s.className="isl"+(on?" on":" off");
+    s.innerHTML=`<div class="isl-em">${it.emoji}</div><div class="isl-n">${on?it.name:it.need+"회"}</div>`;
+    slots.appendChild(s);
+  });
+
+  // Notif
+  document.getElementById("notifWrap").innerHTML=
+    ("Notification"in window&&Notification.permission==="default")
+    ?`<div class="notif-bar"><p>🔔 물주기 알림 받기</p><button class="notif-btn" onclick="reqNotif()">켜기</button></div>`:"";
+
+  // Plants sorted
+  const sorted=[...PLANTS].sort((a,b)=>{
+    const da=log[a.id]?getDL(addD(log[a.id],a.days)):-999;
+    const db=log[b.id]?getDL(addD(log[b.id],b.days)):-999;
+    return da-db;
+  });
+
   const list=document.getElementById("plantList");
   list.innerHTML="";
-
-  PLANTS.forEach((p,i) => {
-    const last=log[p.id], next=last?addDays(last,p.days):null;
+  sorted.forEach(p=>{
+    const last=log[p.id],next=last?addD(last,p.days):null;
     const dl=next?getDL(next):null;
-    const isLate=dl!==null&&dl<=0, isSoon=dl!==null&&dl>0&&dl<=2, isNone=!last;
+    const isL=dl!==null&&dl<=0,isS=dl!==null&&dl>0&&dl<=2,isN=!last,isO=!isL&&!isS&&!isN;
     const prog=last?Math.max(0,Math.min(100,((p.days-(dl??0))/p.days)*100)):0;
-
-    const accent=isLate?"#E07050":isSoon?"#D4A020":!isNone?"#4A8C5A":"#C0D8C0";
-    const bbg=isLate?"#FEF0EC":isSoon?"#FEF7E6":!isNone?"#EBF5EC":"#F0F4F0";
-    const bc=isLate?"#C85030":isSoon?"#B88010":!isNone?"#3A7A4A":"#7A927A";
-    const bt=isNone?"기록 없음":isLate?`${Math.abs(dl)}일 지남`:dl===0?"오늘!":dl+"일 후";
-    const btnBg=isLate?"#E07050":isSoon?"#D4A020":"#4A8C5A";
-    const btnLbl=isNone?"처음 물주기 💧":isLate?"지금 물주기 💧":"물줬어요 💧";
     const isPick=picking===p.id;
-
+    const tp=isL?"late":isS?"soon":isN?"none":"ok";
+    const tagT=isN?"기록 없음":isL?`+${Math.abs(dl)}일`:dl===0?"오늘!":dl+"일 후";
+    const btnT=isN?"처음 물주기":isL?"지금 물주기":"물줬어요";
     let chips=`<span class="chip">주기 ${p.days}일</span>`;
-    if(last) chips+=`<span class="chip">마지막 ${fmt(last)}</span>`;
-    if(next) chips+=`<span class="chip">다음 ${fmt(next)}</span>`;
-
-    let prog_html="";
-    if(last) prog_html=`
-      <div class="progress-wrap">
-        <div class="progress-labels"><span>물주기 주기</span><span>${Math.round(prog)}%</span></div>
-        <div class="progress-track"><div class="progress-fill" style="width:${prog}%;background:${accent}"></div></div>
-      </div>`;
-
-    let action=isPick?`
-      <div class="pick-box">
-        <div class="pick-label">📅 물 준 날짜를 선택해주세요</div>
-        <input id="di_${p.id}" class="pick-input" type="date" max="${today()}" value="${last||today()}">
-        <div class="pick-btns">
-          <button class="pick-confirm" onclick="waterDate('${p.id}')">이 날짜로 저장</button>
-          <button class="pick-cancel" onclick="togglePick('${p.id}')">취소</button>
-        </div>
-      </div>`:`
-      <div class="btn-row">
-        <button class="btn-main" style="background:${btnBg}" onclick="waterNow('${p.id}')">${btnLbl}</button>
-        <button class="btn-cal" onclick="togglePick('${p.id}')" title="날짜 직접 선택">📅</button>
-      </div>`;
+    if(last)chips+=`<span class="chip">마지막 ${fmt(last)}</span>`;
+    if(next)chips+=`<span class="chip">다음 ${fmt(next)}</span>`;
+    const pgH=last?`<div class="pg-wrap"><div class="pg-lbs"><span>PROGRESS</span><span>${Math.round(prog)}%</span></div><div class="pg-track"><div class="pg-fill pgf-${tp==="none"?"ok":tp}" style="width:${prog}%"></div></div></div>`:"";
+    const actH=isPick
+      ?`<div class="pkbox"><div class="pk-lbl">📅 날짜 선택</div><input id="di_${p.id}" class="pk-in" type="date" max="${toS()}" value="${last||toS()}"><div class="pk-btns"><button class="pk-ok" onclick="waterDate('${p.id}')">저장!</button><button class="pk-no" onclick="togglePick('${p.id}')">취소</button></div></div>`
+      :`<div class="btn-row"><button class="btnw bw-${tp==="none"?"none":tp}" onclick="waterNow('${p.id}')">${btnT} 💧</button><button class="btn-cal" onclick="togglePick('${p.id}')">📅</button></div>`;
 
     const card=document.createElement("div");
-    card.className="card"+(isLate?" late":isSoon?" soon":"");
-    card.style.animationDelay=`${i*0.05}s`;
-    card.innerHTML=`
-      <div class="card-bar" style="background:${accent}"></div>
-      <div class="card-body">
-        <div class="card-top">
-          <div class="card-icon" style="background:${bbg}">${p.emoji}</div>
-          <div class="card-info">
-            <div class="card-name">${p.name}</div>
-            <div class="card-en">${p.en}</div>
-          </div>
-          <div class="card-badge" style="background:${bbg};color:${bc}">${bt}</div>
-        </div>
-        <div class="card-tip">${p.tip}</div>
-        <div class="chips">${chips}</div>
-        ${prog_html}
-        ${action}
-      </div>`;
+    card.className="pcard";
+    card.innerHTML=`<div class="pcard-stripe ps-${tp}"></div><div class="pcard-in"><div class="pc-top"><div class="pc-icon ${tp}">${p.emoji}</div><div class="pc-names"><div class="pc-name">${p.name}</div><div class="pc-en">${p.en}</div></div><div class="pc-badge pb-${tp}">${tagT}</div></div><div class="pc-tip">${p.tip}</div><div class="chips">${chips}</div>${pgH}${actH}</div>`;
     list.appendChild(card);
   });
 }
 
-async function reqNotif() {
-  const r=await Notification.requestPermission();
-  document.getElementById("notifBar").style.display="none";
-  if(r==="granted") showToast("🔔 알림 설정 완료!");
-}
-
-if("serviceWorker"in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});
-if("Notification"in window&&Notification.permission==="default") {
-  document.getElementById("notifBar").style.display="flex";
-}
-
-load(); render();
+// resize garden canvas when window size known
+window.addEventListener("resize",()=>render());
+if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+load();
+prevUnlocked=unlocked().map(i=>i.id);
+render();
 </script>
 </body>
 </html>
