@@ -3,580 +3,284 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#4A7C59">
+<meta name="theme-color" content="#4A8C5A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="식물정원">
 <title>나의 식물 정원</title>
 <link rel="manifest" href="./manifest.json">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --cream: #F7F2E8;
-    --cream-dark: #EDE5D4;
-    --sage: #4A7C59;
-    --sage-light: #7AAD8A;
-    --sage-pale: #D4E8DB;
-    --sage-ultra: #EAF3EE;
-    --bark: #8B6F4E;
-    --bark-light: #C4A882;
-    --bark-ultra: #F5EDE0;
-    --terracotta: #C1714F;
-    --terra-pale: #F5E0D5;
-    --text-dark: #2C3524;
-    --text-mid: #5C6B52;
-    --text-light: #8FA080;
-    --danger: #C0392B;
-    --danger-pale: #FCE8E6;
-    --warn: #D68910;
-    --warn-pale: #FEF5E4;
-  }
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { font-family:'Noto Sans KR',sans-serif; background:#F8FAF8; color:#1A2E1A; min-height:100vh; }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+.header {
+  background:#fff; padding:52px 20px 16px;
+  border-bottom:1px solid #E8F0EA;
+  position:sticky; top:0; z-index:10;
+}
+.header-title { font-size:20px; font-weight:600; }
+.header-sub { font-size:13px; color:#7A9A7A; margin-top:3px; }
+.urgent { color:#C85030; font-weight:500; }
+.ok-text { color:#3A7A4A; font-weight:500; }
 
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background-color: var(--cream);
-    color: var(--text-dark);
-    min-height: 100vh;
-    min-height: 100dvh;
-    overflow-x: hidden;
-  }
+.notif-bar {
+  margin:12px 16px 0; background:#FFF8EE;
+  border:1px solid #F0D8A0; border-radius:14px;
+  padding:12px 14px; display:none;
+  align-items:center; justify-content:space-between; gap:10px;
+}
+.notif-bar p { font-size:12px; color:#9A7A30; flex:1; }
+.notif-btn {
+  background:#D4A020; color:#fff; border:none; border-radius:10px;
+  padding:6px 12px; font-size:12px; font-weight:500;
+  font-family:inherit; cursor:pointer;
+}
 
-  /* ── HEADER ── */
-  .header {
-    position: relative;
-    padding: 56px 24px 32px;
-    background: var(--sage);
-    overflow: hidden;
-  }
-  .header::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 110% 120%, rgba(122,173,138,0.5) 0%, transparent 60%),
-      radial-gradient(ellipse 50% 50% at -10% 80%, rgba(36,68,42,0.4) 0%, transparent 60%);
-  }
-  .header-leaf {
-    position: absolute;
-    right: -20px;
-    top: -10px;
-    opacity: 0.18;
-  }
-  .header-leaf2 {
-    position: absolute;
-    left: -30px;
-    bottom: -20px;
-    opacity: 0.12;
-    transform: rotate(180deg) scaleX(-1);
-  }
-  .header-inner { position: relative; z-index: 1; }
-  .header-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 32px;
-    font-weight: 500;
-    color: #fff;
-    letter-spacing: 0.02em;
-    line-height: 1.1;
-  }
-  .header-subtitle {
-    font-size: 13px;
-    color: rgba(255,255,255,0.72);
-    font-weight: 300;
-    margin-top: 4px;
-    letter-spacing: 0.04em;
-  }
-  .header-stats {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-  }
-  .stat-pill {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 24px;
-    padding: 6px 14px;
-    font-size: 12px;
-    color: rgba(255,255,255,0.9);
-    font-weight: 400;
-    backdrop-filter: blur(4px);
-  }
-  .stat-pill span { font-weight: 500; }
+.list { padding:12px 16px 80px; }
 
-  /* ── NOTIF BANNER ── */
-  .notif-banner {
-    margin: 16px 16px 0;
-    background: var(--bark-ultra);
-    border: 1px solid var(--bark-light);
-    border-radius: 14px;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    animation: slideDown 0.4s ease;
-  }
-  .notif-banner p { font-size: 13px; color: var(--bark); font-weight: 400; flex: 1; }
-  .notif-btn {
-    background: var(--bark);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 7px 14px;
-    font-size: 12px;
-    font-family: 'Noto Sans KR', sans-serif;
-    cursor: pointer;
-    white-space: nowrap;
-    font-weight: 500;
-  }
-  .notif-banner.hidden { display: none; }
+.card {
+  background:#fff; border-radius:18px; margin-bottom:10px;
+  border:1px solid #E8F0EA; overflow:hidden;
+  box-shadow:0 1px 6px rgba(74,140,90,0.06);
+  animation:fadeUp 0.4s ease both;
+}
+.card.late { border-color:#F5D5CC; box-shadow:0 2px 10px rgba(224,112,80,0.08); }
+.card.soon { border-color:#F0E0B0; }
 
-  /* ── SECTION ── */
-  .section {
-    padding: 20px 16px 0;
-  }
-  .section-label {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text-light);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    padding-left: 2px;
-  }
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
 
-  /* ── PLANT CARD ── */
-  .plant-card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 18px 18px 16px;
-    margin-bottom: 10px;
-    border: 1px solid rgba(74,124,89,0.1);
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    animation: fadeUp 0.5s ease both;
-  }
-  .plant-card:active { transform: scale(0.985); }
-  .card-accent {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 20px 20px 0 0;
-  }
-  .accent-ok { background: linear-gradient(90deg, var(--sage), var(--sage-light)); }
-  .accent-soon { background: linear-gradient(90deg, var(--warn), #F5CBA7); }
-  .accent-late { background: linear-gradient(90deg, var(--danger), #EC7063); }
-  .accent-none { background: var(--cream-dark); }
+.card-bar { height:3px; }
+.card-body { padding:16px 16px 14px; }
 
-  .card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .card-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 22px;
-  }
-  .card-names { flex: 1; min-width: 0; }
-  .card-name {
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text-dark);
-    line-height: 1.2;
-  }
-  .card-name-en {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    color: var(--text-light);
-    font-style: italic;
-    margin-top: 1px;
-  }
-  .card-badge {
-    font-size: 12px;
-    font-weight: 500;
-    padding: 4px 12px;
-    border-radius: 20px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .badge-ok { background: var(--sage-ultra); color: var(--sage); }
-  .badge-soon { background: var(--warn-pale); color: var(--warn); }
-  .badge-late { background: var(--danger-pale); color: var(--danger); }
-  .badge-none { background: var(--cream-dark); color: var(--text-light); }
+.card-top { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.card-icon {
+  width:46px; height:46px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; flex-shrink:0;
+}
+.card-info { flex:1; min-width:0; }
+.card-name { font-size:15px; font-weight:600; }
+.card-en { font-size:12px; color:#9AB09A; margin-top:1px; }
+.card-badge {
+  font-size:12px; font-weight:600; padding:5px 12px;
+  border-radius:20px; white-space:nowrap; flex-shrink:0;
+}
 
-  .card-tip {
-    font-size: 12px;
-    color: var(--text-light);
-    font-weight: 300;
-    line-height: 1.5;
-    margin-bottom: 12px;
-    padding: 8px 10px;
-    background: var(--sage-ultra);
-    border-radius: 10px;
-    border-left: 2px solid var(--sage-pale);
-  }
+.card-tip {
+  font-size:12px; color:#6A8A6A; background:#F3F8F3;
+  border-radius:10px; padding:8px 12px; margin-bottom:10px;
+  border-left:3px solid #C0D8C0; line-height:1.5;
+}
 
-  .card-meta {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-  }
-  .meta-chip {
-    font-size: 11px;
-    color: var(--text-mid);
-    background: var(--cream);
-    border: 1px solid var(--cream-dark);
-    border-radius: 8px;
-    padding: 3px 9px;
-  }
+.chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+.chip {
+  font-size:11px; color:#5A7A5A; background:#F0F6F0;
+  border:1px solid #D8EAD8; border-radius:8px; padding:3px 9px;
+}
 
-  .card-progress-wrap {
-    margin-bottom: 14px;
-  }
-  .progress-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--text-light);
-    margin-bottom: 5px;
-  }
-  .progress-bar {
-    height: 6px;
-    background: var(--cream-dark);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 10px;
-    transition: width 0.6s cubic-bezier(.23,1,.32,1);
-  }
-  .fill-ok { background: linear-gradient(90deg, var(--sage), var(--sage-light)); }
-  .fill-soon { background: linear-gradient(90deg, var(--warn), #F5CBA7); }
-  .fill-late { background: linear-gradient(90deg, var(--danger), #EC7063); }
+.progress-wrap { margin-bottom:12px; }
+.progress-labels {
+  display:flex; justify-content:space-between;
+  font-size:11px; color:#9AB09A; margin-bottom:4px;
+}
+.progress-track { height:5px; background:#EEF4EE; border-radius:10px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:10px; transition:width 0.5s ease; }
 
-  .water-btn {
-    width: 100%;
-    padding: 11px;
-    border-radius: 14px;
-    border: none;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.15s ease;
-  }
-  .water-btn:active { transform: scale(0.97); }
-  .btn-late {
-    background: var(--danger);
-    color: #fff;
-  }
-  .btn-soon {
-    background: var(--warn);
-    color: #fff;
-  }
-  .btn-ok {
-    background: var(--sage-pale);
-    color: var(--sage);
-  }
-  .btn-none {
-    background: var(--cream-dark);
-    color: var(--text-mid);
-  }
+.btn-row { display:flex; gap:8px; }
+.btn-main {
+  flex:1; padding:11px; border-radius:13px; border:none;
+  color:#fff; font-size:14px; font-weight:600;
+  font-family:inherit; cursor:pointer; transition:opacity 0.15s;
+}
+.btn-main:active { opacity:0.82; }
+.btn-cal {
+  padding:11px 15px; border-radius:13px;
+  border:1px solid #C8DCC8; background:#fff;
+  color:#5A7A5A; font-size:16px; cursor:pointer;
+}
 
-  /* ── TOAST ── */
-  .toast {
-    position: fixed;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--text-dark);
-    color: #fff;
-    font-size: 13px;
-    font-weight: 400;
-    padding: 12px 22px;
-    border-radius: 30px;
-    white-space: nowrap;
-    z-index: 9999;
-    transition: transform 0.35s cubic-bezier(.23,1,.32,1), opacity 0.35s;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
+.pick-box {
+  background:#F3F8F3; border-radius:14px; padding:14px;
+}
+.pick-label { font-size:13px; color:#4A6A4A; font-weight:500; margin-bottom:10px; }
+.pick-input {
+  width:100%; padding:10px 14px; border-radius:10px;
+  border:1.5px solid #C0D8C0; font-size:14px;
+  background:#fff; font-family:inherit; margin-bottom:8px;
+  outline:none; color:#1A2E1A;
+}
+.pick-input:focus { border-color:#4A8C5A; }
+.pick-btns { display:flex; gap:8px; }
+.pick-confirm {
+  flex:1; padding:10px; border-radius:12px; border:none;
+  background:#4A8C5A; color:#fff; font-size:13px; font-weight:600;
+  font-family:inherit; cursor:pointer;
+}
+.pick-cancel {
+  padding:10px 14px; border-radius:12px;
+  border:1px solid #C0D8C0; background:#fff;
+  color:#6A8A6A; font-size:13px; font-family:inherit; cursor:pointer;
+}
 
-  /* ── BOTTOM SPACE ── */
-  .bottom-space { height: 40px; }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes ripple {
-    from { transform: scale(0); opacity: 0.4; }
-    to { transform: scale(3); opacity: 0; }
-  }
-
-  .plant-card:nth-child(1) { animation-delay: 0.05s; }
-  .plant-card:nth-child(2) { animation-delay: 0.10s; }
-  .plant-card:nth-child(3) { animation-delay: 0.15s; }
-  .plant-card:nth-child(4) { animation-delay: 0.20s; }
-  .plant-card:nth-child(5) { animation-delay: 0.25s; }
-  .plant-card:nth-child(6) { animation-delay: 0.30s; }
-  .plant-card:nth-child(7) { animation-delay: 0.35s; }
+.toast {
+  position:fixed; bottom:28px; left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#1A2E1A; color:#fff; font-size:13px; font-weight:500;
+  padding:11px 22px; border-radius:30px; white-space:nowrap;
+  box-shadow:0 4px 20px rgba(0,0,0,0.15); z-index:999;
+  opacity:0; transition:all 0.28s ease; pointer-events:none;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- SVG defs for leaf shapes -->
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <clipPath id="none"></clipPath>
-  </defs>
-</svg>
-
-<header class="header">
-  <!-- Decorative leaves -->
-  <svg class="header-leaf" width="180" height="220" viewBox="0 0 180 220" fill="none">
-    <path d="M90 10 C130 30 170 80 160 130 C150 180 100 210 70 200 C40 190 10 150 20 100 C30 50 60 -5 90 10Z" fill="white"/>
-    <path d="M90 10 C90 10 90 110 70 200" stroke="white" stroke-width="1.5" fill="none" opacity="0.5"/>
-    <path d="M90 60 C110 55 140 70 150 90" stroke="white" stroke-width="1" fill="none" opacity="0.4"/>
-    <path d="M82 100 C60 95 40 110 35 130" stroke="white" stroke-width="1" fill="none" opacity="0.4"/>
-    <path d="M78 140 C100 135 130 145 140 160" stroke="white" stroke-width="1" fill="none" opacity="0.3"/>
-  </svg>
-  <svg class="header-leaf2" width="140" height="170" viewBox="0 0 140 170" fill="none">
-    <path d="M70 5 C100 25 130 65 120 105 C110 145 75 165 55 158 C35 151 8 118 15 78 C22 38 48 -8 70 5Z" fill="white"/>
-    <path d="M70 5 C70 5 68 85 55 158" stroke="white" stroke-width="1.5" fill="none" opacity="0.5"/>
-  </svg>
-
-  <div class="header-inner">
-    <div class="header-title">나의 식물 정원</div>
-    <div class="header-subtitle">My Botanical Garden</div>
-    <div class="header-stats" id="headerStats">
-      <div class="stat-pill">🌿 <span id="totalCount">7</span>개 식물</div>
-      <div class="stat-pill" id="urgentPill">💧 <span id="urgentCount">0</span>개 물주기 필요</div>
-    </div>
-  </div>
-</header>
-
-<div id="notifBanner" class="notif-banner hidden">
-  <p>🔔 물주기 알림을 받아보세요</p>
-  <button class="notif-btn" onclick="requestNotif()">알림 켜기</button>
+<div class="header">
+  <div class="header-title">나의 식물 정원 🌿</div>
+  <div class="header-sub" id="headerSub"></div>
 </div>
 
-<div class="section">
-  <div class="section-label">내 식물들</div>
-  <div id="plantList"></div>
+<div class="notif-bar" id="notifBar">
+  <p>🔔 물주기 알림을 받아볼 수 있어요</p>
+  <button class="notif-btn" onclick="reqNotif()">알림 켜기</button>
 </div>
 
-<div class="bottom-space"></div>
+<div class="list" id="plantList"></div>
 <div class="toast" id="toast"></div>
 
 <script>
 const PLANTS = [
-  { id:'asparagus', name:'아스파라거스', en:'Asparagus Fern', days:3, emoji:'🌾',
-    tip:'흙 표면이 마르면 바로 물주기. 촉촉한 상태 유지해주세요.' },
-  { id:'monstera', name:'몬스테라 스프루세아나', en:'Monstera Spruceana', days:7, emoji:'🌿',
-    tip:'잎이 처지면 물 부족 신호예요. 잎 분무도 좋아해요.' },
-  { id:'albuca', name:'알부카 스피랄리스', en:'Albuca Spiralis', days:10, emoji:'🌀',
-    tip:'봄·가을 생장기엔 조금 더 자주 주세요. 과습 주의!' },
-  { id:'fishbone', name:'피쉬본', en:'Fishbone Cactus', days:14, emoji:'🪴',
-    tip:'흙이 완전히 마른 후 물주기. 선인장처럼 관리하세요.' },
-  { id:'ungdong', name:'웅동자금', en:"Bear's Paw", days:14, emoji:'🐾',
-    tip:'잎에 물이 닿지 않게 주의! 아랫부분에만 조심히 주세요.' },
-  { id:'goemaaok', name:'괴마옥', en:'Euphorbia Obesa', days:21, emoji:'🌵',
-    tip:'겨울엔 한 달에 1회로 줄이기. 건조하게 키우세요.' },
-  { id:'ujumok', name:'우주목', en:'Jade Plant', days:21, emoji:'💎',
-    tip:'잎이 쭈글거리면 물 부족 신호. 줄기를 튼튼하게 키워요.' },
+  { id:"asparagus", name:"아스파라거스", en:"Asparagus Fern", days:3, emoji:"🌾",
+    tip:"흙 표면이 마르면 바로 물주기. 촉촉한 상태를 유지해주세요." },
+  { id:"monstera", name:"몬스테라 스프루세아나", en:"Monstera Spruceana", days:7, emoji:"🌿",
+    tip:"잎이 처지면 물 부족 신호. 잎 분무도 좋아해요." },
+  { id:"albuca", name:"알부카 스피랄리스", en:"Albuca Spiralis", days:10, emoji:"🌀",
+    tip:"봄·가을 생장기엔 더 자주. 과습 주의!" },
+  { id:"fishbone", name:"피쉬본", en:"Fishbone Cactus", days:14, emoji:"🪴",
+    tip:"흙이 완전히 마른 후 물주기. 과습 금물!" },
+  { id:"ungdong", name:"웅동자금", en:"Bear's Paw", days:14, emoji:"🐾",
+    tip:"잎에 물 닿지 않게 주의! 아랫부분에만 주세요." },
+  { id:"goemaaok", name:"괴마옥", en:"Euphorbia Obesa", days:21, emoji:"🌵",
+    tip:"겨울엔 한 달에 1회. 건조하게 키우기." },
+  { id:"ujumok", name:"우주목", en:"Jade Plant", days:21, emoji:"💎",
+    tip:"잎이 쭈글거리면 물 부족 신호. 줄기 튼튼하게." },
 ];
 
-let log = {};
+let log = {}, picking = null;
 
-function loadLog() {
-  try { log = JSON.parse(localStorage.getItem('plantWaterLog') || '{}'); } catch { log = {}; }
-}
+const today = () => new Date().toISOString().split("T")[0];
+const addDays = (s,n) => { const d=new Date(s); d.setDate(d.getDate()+n); return d.toISOString().split("T")[0]; };
+const getDL = (s) => { const t=new Date(); t.setHours(0,0,0,0); const n=new Date(s); n.setHours(0,0,0,0); return Math.ceil((n-t)/864e5); };
+const fmt = (s) => { if(!s)return""; const d=new Date(s); return `${d.getMonth()+1}월 ${d.getDate()}일`; };
 
-function saveLog() {
-  try { localStorage.setItem('plantWaterLog', JSON.stringify(log)); } catch {}
-}
-
-function today() {
-  return new Date().toISOString().split('T')[0];
-}
-
-function addDays(dateStr, n) {
-  const d = new Date(dateStr);
-  d.setDate(d.getDate() + n);
-  return d.toISOString().split('T')[0];
-}
-
-function getDaysLeft(nextDate) {
-  const t = new Date(); t.setHours(0,0,0,0);
-  const n = new Date(nextDate); n.setHours(0,0,0,0);
-  return Math.ceil((n - t) / 86400000);
-}
-
-function fmtDate(str) {
-  const d = new Date(str);
-  return `${d.getMonth()+1}/${d.getDate()}`;
-}
-
-function getStatus(plant) {
-  const last = log[plant.id];
-  if (!last) return { type:'none', label:'기록 없음', daysLeft: null, progress: 0 };
-  const nextDate = addDays(last, plant.days);
-  const dl = getDaysLeft(nextDate);
-  const progress = Math.max(0, Math.min(100, ((plant.days - dl) / plant.days) * 100));
-  if (dl <= 0) return { type:'late', label: dl === 0 ? '오늘 물주세요!' : `${Math.abs(dl)}일 지났어요`, daysLeft: dl, nextDate, progress: 100 };
-  if (dl <= 2) return { type:'soon', label:`${dl}일 후`, daysLeft: dl, nextDate, progress };
-  return { type:'ok', label:`${dl}일 후`, daysLeft: dl, nextDate, progress };
-}
-
-function renderAll() {
-  const list = document.getElementById('plantList');
-  list.innerHTML = '';
-
-  let urgent = 0;
-  PLANTS.forEach((p, i) => {
-    const st = getStatus(p);
-    if (st.type === 'late' || st.type === 'none') urgent++;
-
-    const card = document.createElement('div');
-    card.className = 'plant-card';
-    card.style.animationDelay = `${i * 0.06}s`;
-
-    const accentClass = { ok:'accent-ok', soon:'accent-soon', late:'accent-late', none:'accent-none' }[st.type];
-    const badgeClass = { ok:'badge-ok', soon:'badge-soon', late:'badge-late', none:'badge-none' }[st.type];
-    const btnClass = { ok:'btn-ok', soon:'btn-soon', late:'btn-late', none:'btn-none' }[st.type];
-    const fillClass = { ok:'fill-ok', soon:'fill-soon', late:'fill-late', none:'fill-ok' }[st.type];
-
-    const iconBgs = { ok:'#EAF3EE', soon:'#FEF5E4', late:'#FCE8E6', none:'#F5F0E8' };
-    const iconBg = iconBgs[st.type];
-
-    let metaHtml = `<span class="meta-chip">주기 ${p.days}일</span>`;
-    if (log[p.id]) metaHtml += `<span class="meta-chip">마지막 ${fmtDate(log[p.id])}</span>`;
-    if (st.nextDate) metaHtml += `<span class="meta-chip">다음 ${fmtDate(st.nextDate)}</span>`;
-
-    let progressHtml = '';
-    if (log[p.id]) {
-      progressHtml = `
-        <div class="card-progress-wrap">
-          <div class="progress-labels">
-            <span>마지막 물주기</span>
-            <span>${st.type === 'late' ? '기한 초과' : st.type === 'none' ? '' : `${Math.round(st.progress)}%`}</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill ${fillClass}" style="width:${st.progress}%"></div>
-          </div>
-        </div>`;
-    }
-
-    const btnLabel = st.type === 'late' ? '지금 물주기 💧' : st.type === 'soon' ? '물주기 💧' : st.type === 'none' ? '처음 물주기 💧' : '물줬어요 💧';
-
-    card.innerHTML = `
-      <div class="card-accent ${accentClass}"></div>
-      <div class="card-top">
-        <div class="card-icon" style="background:${iconBg}">${p.emoji}</div>
-        <div class="card-names">
-          <div class="card-name">${p.name}</div>
-          <div class="card-name-en">${p.en}</div>
-        </div>
-        <div class="card-badge ${badgeClass}">${st.label}</div>
-      </div>
-      <div class="card-tip">${p.tip}</div>
-      <div class="card-meta">${metaHtml}</div>
-      ${progressHtml}
-      <button class="water-btn ${btnClass}" onclick="water('${p.id}')">${btnLabel}</button>
-    `;
-    list.appendChild(card);
-  });
-
-  document.getElementById('urgentCount').textContent = urgent;
-  const pill = document.getElementById('urgentPill');
-  if (urgent > 0) {
-    pill.style.background = 'rgba(192,57,43,0.25)';
-    pill.style.borderColor = 'rgba(192,57,43,0.4)';
-  } else {
-    pill.style.background = '';
-    pill.style.borderColor = '';
-  }
-}
-
-function water(plantId) {
-  log[plantId] = today();
-  saveLog();
-  renderAll();
-  const p = PLANTS.find(x => x.id === plantId);
-  showToast(`${p.name}에 물을 줬어요 💧`);
-  scheduleLocalNotif(p);
-}
+function load() { try{ log=JSON.parse(localStorage.getItem("plantLog")||"{}"); }catch{log={};} }
+function save() { try{ localStorage.setItem("plantLog",JSON.stringify(log)); }catch{} }
 
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2200);
 }
 
-function scheduleLocalNotif(plant) {
-  if (!('Notification' in window) || Notification.permission !== 'granted') return;
-  const next = new Date(addDays(today(), plant.days));
-  next.setHours(9, 0, 0, 0);
-  const delay = next - Date.now();
-  if (delay > 0 && delay < 8 * 86400000) {
-    setTimeout(() => {
-      new Notification('🌿 물주기 알림', { body: `${plant.name}에 물 줄 시간이에요!` });
-    }, delay);
-  }
+function waterNow(id) { log[id]=today(); save(); picking=null; render(); showToast("💧 물줬어요!"); }
+
+function waterDate(id) {
+  const v=document.getElementById("di_"+id)?.value;
+  if(v){ log[id]=v; save(); picking=null; render(); showToast("📅 "+fmt(v)+"으로 기록됐어요"); }
 }
 
-async function requestNotif() {
-  if (!('Notification' in window)) return;
-  const perm = await Notification.requestPermission();
-  document.getElementById('notifBanner').classList.add('hidden');
-  if (perm === 'granted') {
-    showToast('알림이 설정됐어요! 🔔');
-  }
+function togglePick(id) { picking=picking===id?null:id; render(); }
+
+function updateHeader() {
+  const urgent=PLANTS.filter(p=>{ const l=log[p.id]; return !l||getDL(addDays(l,p.days))<=0; }).length;
+  document.getElementById("headerSub").innerHTML = urgent>0
+    ? `오늘 ${fmt(today())} · <span class="urgent">${urgent}개 물주기 필요해요</span>`
+    : `오늘 ${fmt(today())} · <span class="ok-text">모든 식물 괜찮아요 ✓</span>`;
 }
 
-function checkNotifBanner() {
-  if ('Notification' in window && Notification.permission === 'default') {
-    document.getElementById('notifBanner').classList.remove('hidden');
-  }
+function render() {
+  updateHeader();
+  const list=document.getElementById("plantList");
+  list.innerHTML="";
+
+  PLANTS.forEach((p,i) => {
+    const last=log[p.id], next=last?addDays(last,p.days):null;
+    const dl=next?getDL(next):null;
+    const isLate=dl!==null&&dl<=0, isSoon=dl!==null&&dl>0&&dl<=2, isNone=!last;
+    const prog=last?Math.max(0,Math.min(100,((p.days-(dl??0))/p.days)*100)):0;
+
+    const accent=isLate?"#E07050":isSoon?"#D4A020":!isNone?"#4A8C5A":"#C0D8C0";
+    const bbg=isLate?"#FEF0EC":isSoon?"#FEF7E6":!isNone?"#EBF5EC":"#F0F4F0";
+    const bc=isLate?"#C85030":isSoon?"#B88010":!isNone?"#3A7A4A":"#7A927A";
+    const bt=isNone?"기록 없음":isLate?`${Math.abs(dl)}일 지남`:dl===0?"오늘!":dl+"일 후";
+    const btnBg=isLate?"#E07050":isSoon?"#D4A020":"#4A8C5A";
+    const btnLbl=isNone?"처음 물주기 💧":isLate?"지금 물주기 💧":"물줬어요 💧";
+    const isPick=picking===p.id;
+
+    let chips=`<span class="chip">주기 ${p.days}일</span>`;
+    if(last) chips+=`<span class="chip">마지막 ${fmt(last)}</span>`;
+    if(next) chips+=`<span class="chip">다음 ${fmt(next)}</span>`;
+
+    let prog_html="";
+    if(last) prog_html=`
+      <div class="progress-wrap">
+        <div class="progress-labels"><span>물주기 주기</span><span>${Math.round(prog)}%</span></div>
+        <div class="progress-track"><div class="progress-fill" style="width:${prog}%;background:${accent}"></div></div>
+      </div>`;
+
+    let action=isPick?`
+      <div class="pick-box">
+        <div class="pick-label">📅 물 준 날짜를 선택해주세요</div>
+        <input id="di_${p.id}" class="pick-input" type="date" max="${today()}" value="${last||today()}">
+        <div class="pick-btns">
+          <button class="pick-confirm" onclick="waterDate('${p.id}')">이 날짜로 저장</button>
+          <button class="pick-cancel" onclick="togglePick('${p.id}')">취소</button>
+        </div>
+      </div>`:`
+      <div class="btn-row">
+        <button class="btn-main" style="background:${btnBg}" onclick="waterNow('${p.id}')">${btnLbl}</button>
+        <button class="btn-cal" onclick="togglePick('${p.id}')" title="날짜 직접 선택">📅</button>
+      </div>`;
+
+    const card=document.createElement("div");
+    card.className="card"+(isLate?" late":isSoon?" soon":"");
+    card.style.animationDelay=`${i*0.05}s`;
+    card.innerHTML=`
+      <div class="card-bar" style="background:${accent}"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div class="card-icon" style="background:${bbg}">${p.emoji}</div>
+          <div class="card-info">
+            <div class="card-name">${p.name}</div>
+            <div class="card-en">${p.en}</div>
+          </div>
+          <div class="card-badge" style="background:${bbg};color:${bc}">${bt}</div>
+        </div>
+        <div class="card-tip">${p.tip}</div>
+        <div class="chips">${chips}</div>
+        ${prog_html}
+        ${action}
+      </div>`;
+    list.appendChild(card);
+  });
 }
 
-// PWA Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {});
+async function reqNotif() {
+  const r=await Notification.requestPermission();
+  document.getElementById("notifBar").style.display="none";
+  if(r==="granted") showToast("🔔 알림 설정 완료!");
 }
 
-loadLog();
-renderAll();
-checkNotifBanner();
+if("serviceWorker"in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});
+if("Notification"in window&&Notification.permission==="default") {
+  document.getElementById("notifBar").style.display="flex";
+}
+
+load(); render();
 </script>
 </body>
 </html>
