@@ -1,3 +1,8 @@
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+
+
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -10,34 +15,26 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/neodgm/neodgm-webfont@latest/neodgm/style.css">
 <style>
 :root {
-  /* 스타듀밸리 UI 컬러 팔레트 */
   --bg:       #a35431; 
   --wood1:    #5c2400; 
   --wood2:    #d48e55; 
   --wood3:    #fce1b6; 
   --wood4:    #ffffff; 
   --wood5:    #e6a873; 
-  
   --parch:    #fce1b6;
   --parch2:   #f5d69d;
   --parch3:   #e6a873;
-  
   --gold:     #ffcc00;
   --gold2:    #ffeba6;
-  
   --green1:   #1f5000;
   --green2:   #348400;
   --green3:   #62d800;
   --green4:   #94ff33;
-  
   --red1:     #6a0000;
   --red2:     #b40000;
-  
   --amber1:   #8a4808;
   --amber2:   #d87c14;
-  
   --blue1:    #1840a0;
-  
   --txt:      #4b1d0a;
   --txt2:     #6a2d10;
   --txt3:     #8a4c28;
@@ -53,17 +50,12 @@ body {
   background-color: var(--bg);
 }
 
-#scroll {
-  flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
-}
+#scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
 
 .sdv-box {
   background-color: var(--wood3);
   border: 4px solid var(--wood1);
-  box-shadow: 
-    inset 4px 4px 0px var(--wood4), 
-    inset -4px -4px 0px var(--wood2),
-    0 6px 16px rgba(0,0,0,0.4);
+  box-shadow: inset 4px 4px 0px var(--wood4), inset -4px -4px 0px var(--wood2), 0 6px 16px rgba(0,0,0,0.4);
   border-radius: 0; 
   margin: 14px 12px 0;
   image-rendering: pixelated;
@@ -107,12 +99,10 @@ body {
   gap: 8px; position: relative; z-index: 1;
 }
 .portrait-frame {
-  width:80px; height:80px;
-  background: #65b8f0; 
+  width:80px; height:80px; background: #65b8f0; 
   border: 4px solid var(--wood1);
   box-shadow: inset 4px 4px 0px rgba(255,255,255,0.4), inset -4px -4px 0px rgba(0,0,0,0.2);
-  display: flex; align-items:center; justify-content:center;
-  overflow: hidden; 
+  display: flex; align-items:center; justify-content:center; overflow: hidden; 
 }
 #charCanvas { image-rendering:pixelated; display:block; }
 .portrait-name { font-size:14px; color: var(--txt); text-align:center; }
@@ -129,8 +119,7 @@ body {
 .xp-bar { height: 16px; background: var(--parch3); border: 2px solid var(--wood1); position:relative; }
 .xp-fill {
   height:100%; background: var(--green3);
-  border-top: 2px solid var(--green4);
-  border-bottom: 2px solid var(--green2);
+  border-top: 2px solid var(--green4); border-bottom: 2px solid var(--green2);
   transition: width .5s ease;
 }
 
@@ -169,11 +158,7 @@ body {
 .pt-soon { background:var(--gold); color:var(--txt); }
 .pt-late { background:var(--red2); color:white; }
 .pt-none { background:var(--parch3); color:var(--txt2); }
-.pc-tip {
-  font-size:14px; color:var(--txt2); line-height:1.5;
-  background: var(--parch2); padding:10px; margin-bottom:10px;
-  border: 2px dashed var(--wood2);
-}
+.pc-tip { font-size:14px; color:var(--txt2); line-height:1.5; background: var(--parch2); padding:10px; margin-bottom:10px; border: 2px dashed var(--wood2); }
 .chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
 .chip { font-size:12px; color:var(--txt); background: var(--wood5); border: 2px solid var(--wood1); padding: 4px 8px; }
 .pg-wrap { margin-bottom:12px; }
@@ -207,25 +192,13 @@ body {
 }
 .btn-cal:active { transform:translate(2px,2px); }
 
-.pkbox {
-  background:var(--parch); border: 4px solid #9e450b;
-  box-shadow: inset 0 0 0 4px #d18a41; padding:14px; margin-top: 8px;
-}
+.pkbox { background:var(--parch); border: 4px solid #9e450b; box-shadow: inset 0 0 0 4px #d18a41; padding:14px; margin-top: 8px; }
 .pk-lbl { font-size:14px; color:var(--txt); margin-bottom:10px; }
-.pk-in {
-  width:100%; height:40px; padding:0 10px; font-size:16px; font-family:inherit; outline:none; margin-bottom:10px;
-  background:var(--wood4); border:2px solid var(--wood1); color:var(--txt);
-}
+.pk-in { width:100%; height:40px; padding:0 10px; font-size:16px; font-family:inherit; outline:none; margin-bottom:10px; background:var(--wood4); border:2px solid var(--wood1); color:var(--txt); }
 .pk-btns { display:flex; gap:8px; }
-.pk-ok {
-  flex:1; height:40px; cursor:pointer; background:var(--green3); color:var(--txt);
-  font-size:14px; font-family:inherit; border:2px solid var(--wood1);
-}
+.pk-ok { flex:1; height:40px; cursor:pointer; background:var(--green3); color:var(--txt); font-size:14px; font-family:inherit; border:2px solid var(--wood1); }
 .pk-ok:active { transform:translate(2px,2px); }
-.pk-no {
-  height:40px; padding:0 16px; cursor:pointer; font-size:14px; color:var(--txt); font-family:inherit;
-  background:var(--parch2); border:2px solid var(--wood1);
-}
+.pk-no { height:40px; padding:0 16px; cursor:pointer; font-size:14px; color:var(--txt); font-family:inherit; background:var(--parch2); border:2px solid var(--wood1); }
 
 .bspc { height:60px; }
 .toast {
@@ -263,8 +236,8 @@ body {
   </div>
 
   <div class="scene-wrap sdv-box">
-    <div class="scene-top"><div class="scene-ttl">정원</div><div class="scene-stg" id="stageName"></div></div>
-    <canvas id="gardenCanvas" height="144"></canvas>
+    <div class="scene-top"><div class="scene-ttl">자연농원</div><div class="scene-stg" id="stageName"></div></div>
+    <canvas id="gardenCanvas" height="200"></canvas>
   </div>
 
   <div class="char-section sdv-box">
@@ -304,7 +277,6 @@ body {
 <div class="toast" id="toastEl"></div>
 
 <script>
-// 1. 진짜 원래 원하셨던 반려식물 7종 목록!
 const PLANTS=[
   {id:"asp",name:"아스파라거스",en:"Asparagus Fern",days:3,emoji:"🌾",tip:"흙 표면이 마르면 바로 물주기."},
   {id:"mon",name:"몬스테라",en:"Monstera Spruceana",days:7,emoji:"🌿",tip:"잎이 처지면 물 부족 신호."},
@@ -329,18 +301,30 @@ const LEVELS=[
   {min:25,name:"마을의 자랑",sub:"스타듀 밸리 최고의 농장!",next:40},
   {min:40,name:"전설의 농부",sub:"더 이상 바랄 게 없어요!",next:9999},
 ];
-const SNAMES=["황무지","잡초밭 🌱","새싹 🌿","농장 🏡","대농장 🌳","스타듀 밸리 🌟"];
+const SNAMES=["황무지 🌱","잡초밭 ✨","새싹 🌿","농장 🏡","대농장 🌳","스타듀 밸리 🌟"];
 let log={},totalW=0,prevUn=[],picking=null;
+let animReq, charX = 180, charDir = 1, walkTick = 0;
+
 const toS=()=>new Date().toISOString().split("T")[0];
 const addD=(s,n)=>{const d=new Date(s);d.setDate(d.getDate()+n);return d.toISOString().split("T")[0];};
 const getDL=s=>{const a=new Date();a.setHours(0,0,0,0);const b=new Date(s);b.setHours(0,0,0,0);return Math.ceil((b-a)/864e5);};
 const fmt=s=>{if(!s)return"";const d=new Date(s);return`${d.getMonth()+1}/${d.getDate()}`;};
 const fmtF=s=>{if(!s)return"";const d=new Date(s);return`${d.getMonth()+1}월 ${d.getDate()}일`;};
-function load(){try{const d=JSON.parse(localStorage.getItem("pgva_sdv")||"{}");log=d.log||{};totalW=d.totalW||0;}catch{}}
-function save(){try{localStorage.setItem("pgva_sdv",JSON.stringify({log,totalW}));}catch{}}
+function load(){try{const d=JSON.parse(localStorage.getItem("pgva_sdv_nature")||"{}");log=d.log||{};totalW=d.totalW||0;}catch{}}
+function save(){try{localStorage.setItem("pgva_sdv_nature",JSON.stringify({log,totalW}));}catch{}}
 function toast(m){const t=document.getElementById("toastEl");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400);}
-function unlocked(){return ITEMS.filter(i=>totalW>=i.need);}
-function checkUnlock(){const now=unlocked().map(i=>i.id);const n=now.filter(id=>!prevUn.includes(id));if(n.length){const it=ITEMS.find(i=>i.id===n[0]);document.getElementById("ulEm").textContent=it.emoji;document.getElementById("ulDesc").textContent=it.desc;document.getElementById("ulbg").classList.add("show");}prevUn=[...now];}
+function unlocked(){return ITEMS.filter(i=>totalW>=i.need).map(i=>i.id);}
+function checkUnlock(){
+  const now=unlocked();
+  const n=now.filter(id=>!prevUn.includes(id));
+  if(n.length){
+    const it=ITEMS.find(i=>i.id===n[0]);
+    document.getElementById("ulEm").textContent=it.emoji;
+    document.getElementById("ulDesc").textContent=it.desc;
+    document.getElementById("ulbg").classList.add("show");
+  }
+  prevUn=[...now];
+}
 function closeUl(){document.getElementById("ulbg").classList.remove("show");}
 function waterNow(id){log[id]=toS();totalW++;save();checkUnlock();picking=null;render();toast("경험치 +1 획득!");}
 function waterDate(id){const v=document.getElementById("di_"+id)?.value;if(v){log[id]=v;totalW++;save();checkUnlock();picking=null;render();toast(fmtF(v)+" 기록 완료!");}}
@@ -348,80 +332,176 @@ function togglePick(id){picking=picking===id?null:id;render();}
 async function reqNotif(){const r=await Notification.requestPermission();render();if(r==="granted")toast("알림이 켜졌습니다!");}
 function gStage(){if(totalW>=40)return 5;if(totalW>=25)return 4;if(totalW>=15)return 3;if(totalW>=8)return 2;if(totalW>=3)return 1;return 0;}
 
-// 2. 오른쪽 하단에 있던 고퀄리티 펭귄 캐릭터 로직! (크기도 좀 키웠어)
-const P_C={_:null, K:'#0d0d0d', B:'#3a3a3a', W:'#fffbf0', Y:'#f8e040', R:'#f8b0d0', e:'#ffffff'};
-const P_SPR = [
-  "_____KKKK_____",
-  "____KBBBBK____",
-  "___KBBBBBBK___",
-  "__KBBBBBBBBK__",
-  "_KBBWeKeKWeBK_",
-  "KBBBWWWWWBBBBK",
-  "KBBWKeKWeBBBBK",
-  "KBBBWYWYWBBBBK",
-  "KBBBBBBBBBBBBK",
-  "KBBBBBBBBBBBBK",
-  "_KBBBBBBBBBBK_",
-  "__KBBBBBBBBK__",
-  "___KBBBBBBK___",
-  "____KKKKKK____",
-  "___KYYYYYYK___",
-  "____KKKKKK____"
-];
+// 펭귄 그리기
+const P_C={_:null, K:'#0d0d0d', B:'#3a3a3a', W:'#fffbf0', Y:'#f8e040', R:'#f8b0d0', e:'#ffffff', A:'#a8d08d', C:'#5090c0'};
+const P_SPR = ["_____KKKK_____", "____KBBBBK____", "___KBBBBBBK___", "__KBBBBBBBBK__", "_KBBWeKeKWeBK_", "KBBBWWWWWBBBBK", "KBBWKeKWeBBBBK", "KBBBWYWYWBBBBK", "KBBBBBBBBBBBBK", "KBBBBBBBBBBBBK", "_KBBBBBBBBBBK_", "__KBBBBBBBBK__", "___KBBBBBBK___", "____KKKKKK____", "___KYYYYYYK___", "____KKKKKK____"];
+const H_SPR = ["_____eYYYYYYe____", "____eYRRRRRRYe___", "__eeYRRRRRRRRYes_", "_YRRRRRRRRRRRRRYs"];
+const C_SPR = ["___KK__", "__KCCK_", "__KCCK_", "_KCCCCK", "KCKCCCK", "KCKCCCK", "KCCCCCK", "_KKKKK_"];
 
-function drawChar(canvas){
-  // 픽셀이 액자에 예쁘게 차도록 스케일을 4로 키웠어!
-  const S=4; 
-  const H=16, W2=14;
-  canvas.width=W2*S; canvas.height=H*S;
-  const ctx=canvas.getContext('2d');
-  ctx.imageSmoothingEnabled=false; 
+function drawChar(ctx, scale=4, isWalking=false){
+  const ul = unlocked();
   P_SPR.forEach((row,ry)=>{
     [...row].forEach((ch,rx)=>{
-      const col=P_C[ch];
+      let col=P_C[ch];
       if(!col) return;
-      ctx.fillStyle=col;
-      ctx.fillRect(rx*S,ry*S,S,S);
+      if(ul.includes('apr') && ch==='W' && ry >= 9 && ry <= 12) col = P_C['A'];
+      ctx.fillStyle=col; ctx.fillRect(rx*scale,ry*scale,scale,scale);
     });
   });
+  if(ul.includes('hat')){
+    H_SPR.forEach((row, ry) => {
+      [...row].forEach((ch, rx) => {
+        let col = P_C[ch]; if(col){ ctx.fillStyle = col; ctx.fillRect((rx - 1) * scale, (ry - 3) * scale, scale, scale); }
+      });
+    });
+  }
+  if(ul.includes('glov')){
+    ctx.fillStyle='#d84030'; ctx.fillRect(0, 9*scale, 2*scale, 2*scale); ctx.fillRect(12*scale, 9*scale, 2*scale, 2*scale);
+  }
+  if(ul.includes('can')){
+    const canX = isWalking ? -4 : -3; 
+    C_SPR.forEach((row, ry) => {
+      [...row].forEach((ch, rx) => {
+        let col = P_C[ch]; if(col){ ctx.fillStyle = col; ctx.fillRect((rx + canX) * scale, (ry + 8) * scale, scale, scale); }
+      });
+    });
+  }
 }
 
-function drawGarden(canvas){
-  const W=canvas.offsetWidth||360;canvas.width=W;canvas.height=144;
-  const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
-  const st=gStage();
-  const sk=ctx.createLinearGradient(0,0,0,80);sk.addColorStop(0,'#88c0f0');sk.addColorStop(1,'#c0e0f8');
-  ctx.fillStyle=sk;ctx.fillRect(0,0,W,80);
-  ctx.fillStyle='#f8e040';ctx.beginPath();ctx.arc(W-38,26,16,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#ffe060';ctx.beginPath();ctx.arc(W-38,26,11,0,Math.PI*2);ctx.fill();
-  function cloud(x,y){ctx.fillStyle='rgba(255,255,255,.9)';[[0,0,24,11],[16,-4,28,14],[40,0,20,11]].forEach(([cx,cy,cw,ch])=>{ctx.beginPath();ctx.ellipse(x+cx+cw/2,y+cy+ch/2,cw/2,ch/2,0,0,Math.PI*2);ctx.fill();});}
-  cloud(16,14);cloud(W*.35,20);
-  ctx.fillStyle='#78c040';ctx.fillRect(0,78,W,66);
-  ctx.fillStyle='#5ea028';ctx.fillRect(0,78,W,5);
-  ctx.fillStyle='#7a5018';ctx.fillRect(0,92,W,52);
-  ctx.fillStyle='#5a3810';ctx.fillRect(0,92,W,4);
-  for(let i=0;i<W;i+=8){ctx.fillStyle=i%16===0?'#60b028':'#78c840';ctx.beginPath();ctx.moveTo(i,79);ctx.lineTo(i+3,73);ctx.lineTo(i+6,79);ctx.closePath();ctx.fill();}
-  const hx=Math.round(W/2)-34;
-  ctx.fillStyle='rgba(0,0,0,0.06)';ctx.beginPath();ctx.ellipse(hx+34,92,36,4,0,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#c0a878';ctx.fillRect(hx-2,82,72,8);
-  ctx.fillStyle='#f8f0e0';ctx.fillRect(hx,58,72,30);ctx.fillStyle='#e8dcc8';ctx.fillRect(hx+2,60,68,26);
-  ctx.strokeStyle='#2c1a08';ctx.lineWidth=2;ctx.strokeRect(hx,58,72,30);
-  [[hx+6,63],[hx+48,63]].forEach(([wx,wy])=>{ctx.fillStyle='#b8d8ee';ctx.fillRect(wx,wy,18,16);ctx.strokeStyle='#c8a040';ctx.lineWidth=1.5;ctx.strokeRect(wx-1,wy-1,20,18);ctx.beginPath();ctx.moveTo(wx+9,wy-1);ctx.lineTo(wx+9,wy+17);ctx.stroke();ctx.fillStyle='rgba(255,255,255,.4)';ctx.fillRect(wx+1,wy+1,5,4);});
-  ctx.fillStyle='#8a5020';ctx.fillRect(hx+26,68,20,20);ctx.fillStyle='#a86830';ctx.fillRect(hx+28,70,16,16);ctx.strokeStyle='#2c1a08';ctx.lineWidth=1;ctx.strokeRect(hx+26,68,20,20);ctx.fillStyle='#d8a030';ctx.beginPath();ctx.arc(hx+37,80,2.5,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#c03820';ctx.beginPath();ctx.moveTo(hx-10,58);ctx.lineTo(hx+34,22);ctx.lineTo(hx+80,58);ctx.closePath();ctx.fill();
-  ctx.fillStyle='#a02810';ctx.beginPath();ctx.moveTo(hx-10,58);ctx.lineTo(hx+34,22);ctx.lineTo(hx+34,28);ctx.lineTo(hx-4,58);ctx.closePath();ctx.fill();
-  ctx.strokeStyle='#2c1a08';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(hx-10,58);ctx.lineTo(hx+34,22);ctx.lineTo(hx+80,58);ctx.closePath();ctx.stroke();
-  ctx.fillStyle='#b09070';ctx.fillRect(hx+46,26,14,22);ctx.fillStyle='#c8a888';ctx.fillRect(hx+44,24,18,6);
-  if(st>=1){ctx.fillStyle='rgba(220,210,200,.55)';for(let i=0;i<3;i++){ctx.beginPath();ctx.ellipse(hx+53,18-i*7,3+i,4+i,0,0,Math.PI*2);ctx.fill();}}
-  ctx.fillStyle='#c8b070';[0,1,2].forEach(i=>{ctx.beginPath();ctx.ellipse(hx+34,96+i*8,5-i,2,0,0,Math.PI*2);ctx.fill();});
-  function flower(fx,fy,pc,cc,sz=1){const p=3.5*sz;[[0,-p],[p*.7,-p*.7],[p,0],[p*.7,p*.7],[0,p],[-p*.7,p*.7],[-p,0],[-p*.7,-p*.7]].forEach(([dx,dy])=>{ctx.fillStyle=pc;ctx.beginPath();ctx.arc(fx+dx,fy+dy,2.5*sz,0,Math.PI*2);ctx.fill();});ctx.fillStyle=cc;ctx.beginPath();ctx.arc(fx,fy,2.5*sz,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#3a8018';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(fx,fy+2.5*sz);ctx.lineTo(fx,fy+2.5*sz+6);ctx.stroke();}
-  function bush(bx,by,w,h){ctx.fillStyle='#4ab838';ctx.beginPath();ctx.ellipse(bx,by,w,h,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#3aa028';ctx.beginPath();ctx.ellipse(bx-w*.3,by+h*.2,w*.55,h*.55,0,0,Math.PI*2);ctx.fill();}
-  function tree(tx,ty,tw,th){ctx.fillStyle='#9a7030';ctx.fillRect(tx+tw/2-3,ty+th,5,th*.5);ctx.fillStyle='#48b038';ctx.beginPath();ctx.ellipse(tx+tw/2,ty+th/2,tw/2,th/2,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#38a028';ctx.beginPath();ctx.ellipse(tx+tw/2-tw/6,ty+th/2+th/6,tw*.32,th*.32,0,0,Math.PI*2);ctx.fill();}
-  if(st>=1){[[hx-20,90],[hx-12,92],[hx+84,90],[hx+94,92]].forEach(([sx,sy])=>{ctx.fillStyle='#58b030';ctx.beginPath();ctx.moveTo(sx,sy);ctx.bezierCurveTo(sx-4,sy-9,sx+2,sy-11,sx+2,sy-8);ctx.lineTo(sx,sy);ctx.fill();ctx.fillStyle='#48a020';ctx.beginPath();ctx.moveTo(sx,sy);ctx.bezierCurveTo(sx+4,sy-9,sx-2,sy-11,sx-2,sy-8);ctx.lineTo(sx,sy);ctx.fill();});}
-  if(st>=2){flower(hx-30,86,'#f870b8','#fff060');flower(hx-18,88,'#f0a020','#fff');flower(hx+88,86,'#9868e8','#fff860');flower(hx+102,88,'#f06858','#ffee80');bush(hx-22,97,10,6);bush(hx+88,97,10,6);}
-  if(st>=3){flower(18,86,'#f8b0d0','#fff060',1.1);flower(40,84,'#70c0f0','#f8e848');flower(W-36,86,'#f06080','#ffee60',1.1);flower(W-58,84,'#c070f0','#fff');bush(28,97,14,8);bush(W-48,97,14,8);}
-  if(st>=4){tree(2,52,36,38);tree(W-50,52,36,38);tree(hx-64,60,28,30);tree(hx+78,60,28,30);}
-  if(st>=5){tree(-4,38,52,52);tree(W-56,38,52,52);['rgba(255,80,80,.2)','rgba(255,165,0,.2)','rgba(255,220,0,.2)','rgba(60,200,60,.2)','rgba(50,120,255,.2)','rgba(150,50,220,.2)'].forEach((c,i)=>{ctx.strokeStyle=c;ctx.lineWidth=6;ctx.beginPath();ctx.arc(W/2,155,90+i*9,Math.PI,2*Math.PI);ctx.stroke();});}
+// 픽셀 소나무 그리기 함수
+function drawPineTree(ctx, tx, ty, scale) {
+  // 나무 기둥
+  ctx.fillStyle = '#5c2400';
+  ctx.fillRect(tx - 2*scale, ty, 4*scale, 8*scale);
+  
+  // 잎 (3단)
+  ctx.fillStyle = '#2d5c1e'; // 어두운 초록
+  ctx.beginPath(); ctx.moveTo(tx, ty - 15*scale); ctx.lineTo(tx + 12*scale, ty + 2*scale); ctx.lineTo(tx - 12*scale, ty + 2*scale); ctx.fill();
+  ctx.fillStyle = '#3a7c28'; // 중간 초록
+  ctx.beginPath(); ctx.moveTo(tx, ty - 25*scale); ctx.lineTo(tx + 10*scale, ty - 5*scale); ctx.lineTo(tx - 10*scale, ty - 5*scale); ctx.fill();
+  ctx.fillStyle = '#4aa338'; // 밝은 초록
+  ctx.beginPath(); ctx.moveTo(tx, ty - 35*scale); ctx.lineTo(tx + 8*scale, ty - 15*scale); ctx.lineTo(tx - 8*scale, ty - 15*scale); ctx.fill();
+}
+
+// 아름다운 정원 배경 그리기 (집 철거 완료!)
+function drawGardenBg(ctx, W, H) {
+  const st = gStage();
+  
+  // 1. 따뜻한 노을빛 하늘
+  let skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.4);
+  skyGrad.addColorStop(0, '#87CEEB'); // 하늘색
+  skyGrad.addColorStop(1, '#FFDAB9'); // 노을빛
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, H * 0.4);
+
+  // 둥근 해
+  ctx.fillStyle = 'rgba(255, 215, 0, 0.8)';
+  ctx.beginPath(); ctx.arc(W - 40, 40, 18, 0, Math.PI * 2); ctx.fill();
+
+  // 2. 푸른 잔디밭
+  ctx.fillStyle = '#64a321';
+  ctx.fillRect(0, H * 0.4, W, H * 0.6);
+  
+  // 잔디 디테일 (랜덤하게 콕콕 찍은 점들)
+  ctx.fillStyle = '#427814';
+  for(let i=10; i<W; i+=25) {
+     for(let j=H*0.4 + 10; j<H; j+=20) {
+        ctx.fillRect(i + (j%3)*5, j, 4, 4);
+        ctx.fillRect(i + (j%3)*5 + 4, j - 4, 4, 4);
+     }
+  }
+
+  // 3. 양쪽 끝을 감싸는 소나무들
+  drawPineTree(ctx, 30, H*0.4 + 10, 2);
+  drawPineTree(ctx, W - 25, H*0.4 + 15, 2.5);
+  drawPineTree(ctx, 15, H*0.4 + 40, 3);
+  drawPineTree(ctx, W - 40, H*0.4 + 50, 2);
+
+  // 4. 넓고 아름다운 밭
+  const px = W/2 - 80;
+  const py = H * 0.55;
+  const pW = 160;
+  const pH = 60;
+  
+  // 밭 나무 울타리
+  ctx.fillStyle = '#5c2400';
+  ctx.fillRect(px - 4, py - 4, pW + 8, 4); // 위
+  ctx.fillRect(px - 4, py + pH, pW + 8, 4); // 아래
+  ctx.fillRect(px - 4, py - 4, 4, pH + 8); // 왼쪽
+  ctx.fillRect(px + pW, py - 4, 4, pH + 8); // 오른쪽
+  
+  // 흙바닥
+  ctx.fillStyle = '#a2653e';
+  ctx.fillRect(px, py, pW, pH); 
+  // 고랑
+  ctx.fillStyle = '#743f1f'; 
+  for(let i=1; i<4; i++) { ctx.fillRect(px, py + i*15, pW, 2); } 
+
+  // 5. 작물 묘사 (디테일 업업!)
+  if(st >= 1) { 
+    ctx.fillStyle='#94ff33';
+    for(let i=0; i<4; i++){ for(let j=0; j<7; j++){ ctx.fillRect(px + 12 + j*22, py + 5 + i*15, 6, 6); } }
+  }
+  if(st >= 3) { 
+    ctx.fillStyle='#348400';
+    for(let i=0; i<4; i++){ for(let j=0; j<7; j++){ ctx.beginPath(); ctx.arc(px + 15 + j*22, py + 8 + i*15, 6, 0, Math.PI*2); ctx.fill(); } }
+  }
+  if(st >= 4) { 
+    // 예쁜 보라색과 빨간색 열매들
+    ctx.fillStyle='#9868e8'; ctx.beginPath(); ctx.arc(px + 37, py + 23, 4, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(px + 81, py + 38, 4, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle='#f06858'; ctx.beginPath(); ctx.arc(px + 103, py + 8, 4, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(px + 125, py + 53, 4, 0, Math.PI*2); ctx.fill();
+  }
+
+  // 6. 감성 폭발 허수아비 (레벨 15 이상)
+  if(st >= 3) {
+      let scX = px + pW - 15;
+      let scY = py - 10;
+      // 막대기
+      ctx.fillStyle='#5c2400'; ctx.fillRect(scX, scY, 4, 25);
+      // 팔
+      ctx.fillRect(scX-12, scY+8, 28, 4);
+      // 몸통(파란 셔츠)
+      ctx.fillStyle='#1840a0'; ctx.fillRect(scX-8, scY+8, 20, 14);
+      // 호박 머리
+      ctx.fillStyle='#f8e040'; ctx.fillRect(scX-6, scY-4, 16, 12);
+      // 눈
+      ctx.fillStyle='#000'; ctx.fillRect(scX-2, scY, 2, 2); ctx.fillRect(scX+4, scY, 2, 2);
+      // 챙 넓은 모자
+      ctx.fillStyle='#6a0000'; ctx.fillRect(scX-10, scY-6, 24, 3);
+      ctx.fillRect(scX-4, scY-12, 12, 6);
+  }
+}
+
+function renderGardenLoop() {
+  const canvas = document.getElementById('gardenCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  
+  drawGardenBg(ctx, W, H);
+
+  // 캐릭터 걷기 로직 (넓어진 마당을 활보!)
+  charX += 0.8 * charDir;
+  if(charX > W - 40) charDir = -1;
+  if(charX < 20) charDir = 1;
+  walkTick++;
+
+  const bounce = Math.abs(Math.sin(walkTick * 0.15)) * 4;
+
+  ctx.save();
+  const scale = 2.5; 
+  // 캐릭터가 밭 바로 앞(위쪽)을 걸어다니도록 Y축 조정
+  ctx.translate(charX, (H * 0.55) - 30 - bounce); 
+
+  if (charDir === -1) {
+     ctx.scale(-1, 1);
+     ctx.translate(-14 * scale, 0); 
+  }
+  drawChar(ctx, scale, true); 
+  ctx.restore();
+
+  animReq = requestAnimationFrame(renderGardenLoop);
 }
 
 function render(){
@@ -431,9 +511,18 @@ function render(){
   const tg=document.getElementById('hTag');
   if(urg.length){tg.style.borderColor='var(--red1)'; tg.style.color='var(--red1)'; tg.textContent=`! ${urg.length}개 필요 !`;}
   else{tg.style.borderColor='var(--green2)'; tg.style.color='var(--green2)'; tg.textContent='- 이상 없음 -';}
-  drawGarden(document.getElementById('gardenCanvas'));
+  
   document.getElementById('stageName').textContent=SNAMES[gStage()];
-  drawChar(document.getElementById('charCanvas'));
+  
+  const charCanvas = document.getElementById('charCanvas');
+  const cCtx = charCanvas.getContext('2d');
+  charCanvas.width = 14 * 4; charCanvas.height = 16 * 4; 
+  cCtx.clearRect(0,0, charCanvas.width, charCanvas.height);
+  drawChar(cCtx, 4, false); 
+
+  if(animReq) cancelAnimationFrame(animReq);
+  renderGardenLoop();
+
   const lv=[...LEVELS].reverse().find(l=>totalW>=l.min)||LEVELS[0];
   const nxt=LEVELS.find(l=>l.min>totalW);
   const pct=nxt?Math.min(100,((totalW-lv.min)/(nxt.min-lv.min))*100):100;
@@ -442,10 +531,13 @@ function render(){
   document.getElementById('charSub').textContent=lv.sub;
   document.getElementById('xpVal').textContent=nxt?`${totalW}/${nxt.min}`:'MAX';
   document.getElementById('xpFill').style.width=pct+'%';
+  
   const sl=document.getElementById('itemSlots');sl.innerHTML='';
   ITEMS.forEach(it=>{const on=totalW>=it.need;const s=document.createElement('div');s.className='inv-slot'+(on?' on':' off');s.innerHTML=`<div class="slot-em">${it.emoji}</div><div class="slot-lbl">${on?it.name:''}</div>${!on?`<div class="slot-need">${it.need}</div>`:''}`;sl.appendChild(s);});
+  
   const nw=document.getElementById('notifWrap');
   nw.innerHTML=('Notification'in window&&Notification.permission==='default')?`<div class="sdv-box" style="padding:10px; display:flex; align-items:center; gap:8px;"><p style="font-size:14px; flex:1;">물주기 알림 설정</p><button class="btnw bw-ok" style="height:32px; font-size:14px;" onclick="reqNotif()">켜기</button></div>`:'';
+  
   const sorted=[...PLANTS].sort((a,b)=>{const da=log[a.id]?getDL(addD(log[a.id],a.days)):-999;const db=log[b.id]?getDL(addD(log[b.id],b.days)):-999;return da-db;});
   const list=document.getElementById('plantList');list.innerHTML='';
   sorted.forEach(p=>{
@@ -467,7 +559,7 @@ function render(){
 }
 
 window.addEventListener('resize',()=>render());
-load();prevUn=unlocked().map(i=>i.id);render();
+load();prevUn=unlocked();render();
 </script>
 </body>
 </html>
