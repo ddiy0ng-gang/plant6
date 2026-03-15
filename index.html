@@ -1,9 +1,4 @@
-<meta name="color-scheme" content="light">
-<meta name="supported-color-schemes" content="light">
-
-
-
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -72,14 +67,16 @@ body {
 .tb-brand { display:flex; align-items:center; gap:8px; }
 .tb-icon { font-size:24px; filter:drop-shadow(0 2px 0 rgba(0,0,0,0.3)); }
 .tb-name { font-size:20px; line-height:1.2; color: var(--txt); }
-.tb-right { text-align:right; }
+.tb-right { text-align:right; display:flex; flex-direction:column; align-items:flex-end; }
 .tb-date { font-size:14px; color: var(--txt2); margin-bottom: 4px; }
+.tb-alert-wrap { display:flex; gap:6px; }
 .tb-alert {
   display: inline-flex; align-items: center; gap: 5px;
   font-size:12px; padding: 4px 8px;
   border: 2px solid var(--wood1);
   background: var(--parch3); color: var(--txt);
 }
+.tb-streak { background: var(--wood4); border-color: #ff4500; color: #d32f2f; font-weight: bold; }
 
 .scene-wrap { overflow: hidden; padding-bottom: 4px; }
 .scene-top {
@@ -103,7 +100,10 @@ body {
   border: 4px solid var(--wood1);
   box-shadow: inset 4px 4px 0px rgba(255,255,255,0.4), inset -4px -4px 0px rgba(0,0,0,0.2);
   display: flex; align-items:center; justify-content:center; overflow: hidden; 
+  cursor: pointer;
+  transition: transform 0.1s;
 }
+.portrait-frame:active { transform: scale(0.95); }
 #charCanvas { image-rendering:pixelated; display:block; }
 .portrait-name { font-size:14px; color: var(--txt); text-align:center; }
 
@@ -126,9 +126,9 @@ body {
 .inv-section { padding: 8px; }
 .inv-header { padding: 4px 8px; margin-bottom: 8px; font-size:16px; color: var(--txt); }
 .inv-body { padding: 4px; }
-.inv-row { display:flex; gap:6px; }
+.inv-row { display:flex; gap:6px; flex-wrap: wrap; }
 .inv-slot {
-  flex:1; aspect-ratio:1;
+  width: calc(25% - 4.5px); aspect-ratio:1;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   gap:4px; position:relative; cursor:default;
   background: var(--wood5); border: 2px solid var(--wood2);
@@ -148,7 +148,10 @@ body {
   width:50px; height:50px; flex-shrink:0;
   display:flex; align-items:center; justify-content:center;
   font-size:28px; background: var(--parch2); border: 2px solid var(--wood1);
-  box-shadow: inset 2px 2px 0px var(--wood4), inset -2px -2px 0px var(--wood2);
+  box-shadow: inset 2px 2px 0px var(--wood4), inset -2px -2px 0px var(--wood2); position:relative;
+}
+.pc-mastery-badge {
+  position: absolute; top:-8px; right:-8px; font-size:18px; filter:drop-shadow(1px 1px 0 rgba(0,0,0,0.5));
 }
 .pc-names { flex:1; min-width:0; }
 .pc-name { font-size:18px; color:var(--txt); margin-bottom: 4px; }
@@ -161,6 +164,7 @@ body {
 .pc-tip { font-size:14px; color:var(--txt2); line-height:1.5; background: var(--parch2); padding:10px; margin-bottom:10px; border: 2px dashed var(--wood2); }
 .chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
 .chip { font-size:12px; color:var(--txt); background: var(--wood5); border: 2px solid var(--wood1); padding: 4px 8px; }
+.chip-mastery { background: #ffeba6; border-color: #d87c14; font-weight:bold; }
 .pg-wrap { margin-bottom:12px; }
 .pg-labels { display:flex; justify-content:space-between; font-size:12px; color:var(--txt2); margin-bottom:6px; }
 .pg-track { height:12px; background: var(--parch3); border: 2px solid var(--wood1); }
@@ -232,7 +236,13 @@ body {
 <div id="scroll">
   <div class="topbar">
     <div class="tb-brand"><span class="tb-icon">🎒</span><div class="tb-name">나의 농장</div></div>
-    <div class="tb-right"><div class="tb-date" id="hDate"></div><div class="tb-alert" id="hTag"></div></div>
+    <div class="tb-right">
+      <div class="tb-date" id="hDate"></div>
+      <div class="tb-alert-wrap">
+        <div class="tb-alert tb-streak" id="hStreak" style="display:none;">🔥 0일</div>
+        <div class="tb-alert" id="hTag"></div>
+      </div>
+    </div>
   </div>
 
   <div class="scene-wrap sdv-box">
@@ -242,7 +252,7 @@ body {
 
   <div class="char-section sdv-box">
     <div class="portrait-col">
-      <div class="portrait-frame"><canvas id="charCanvas"></canvas></div>
+      <div class="portrait-frame" onclick="talk()"><canvas id="charCanvas"></canvas></div>
       <div class="portrait-name" id="charLv">LV.1</div>
     </div>
     <div class="char-info-col">
@@ -255,7 +265,7 @@ body {
   </div>
 
   <div class="inv-section sdv-box">
-    <div class="inv-header">소지품</div>
+    <div class="inv-header">소지품 (템빨이 최고!)</div>
     <div class="inv-body"><div class="inv-row" id="itemSlots"></div></div>
   </div>
 
@@ -285,34 +295,100 @@ const PLANTS=[
   {id:"ung",name:"웅동자금",en:"Bear's Paw",days:14,emoji:"🐾",tip:"잎에 물 닿지 않게!"},
   {id:"goe",name:"괴마옥",en:"Euphorbia Obesa",days:21,emoji:"🌵",tip:"겨울엔 한 달 1회."},
   {id:"uju",name:"우주목",en:"Jade Plant",days:21,emoji:"💎",tip:"잎 쭈글거리면 물 부족."},
+  {id:"sow",name:"소월 선인장",en:"Sowol Cactus",days:28,emoji:"🌵",tip:"흙이 속까지 완전히 마르면 흠뻑 물주기."},
+  {id:"hiv",name:"하트 아이비",en:"Heart Leaf Ivy",days:5,emoji:"🌿",tip:"흙 표면이 마르면 흠뻑 물주기. 과습 주의!"},
+  {id:"avi",name:"아스플레니움 아비스",en:"Asplenium Nidus",days:7,emoji:"🥬",tip:"중심부 새순에 물이 고이지 않게 조심! 겉흙이 마르면 흠뻑 주세요."},
 ];
+
 const ITEMS=[
   {id:"can", emoji:"🪣",name:"물조리개",desc:"물 3회 달성!\n초보자용 물조리개를 얻었다!",need:3},
   {id:"hat", emoji:"🌻",name:"꽃 모자",desc:"물 8회 달성!\n농사 필수품 밀짚모자!",need:8},
   {id:"glov",emoji:"🧤",name:"장갑",desc:"물 15회 달성!\n손에 착 감기는 원예 장갑!",need:15},
   {id:"apr", emoji:"👕",name:"앞치마",desc:"물 25회 달성!\n흙이 묻어도 괜찮은 셔츠!",need:25},
   {id:"shov",emoji:"⛏️",name:"삽",desc:"물 40회 달성!\n단단한 이리듐 삽 획득!",need:40},
+  {id:"gcan",emoji:"🏆",name:"황금 조리개",desc:"물 60회 달성!\n녹슬지 않는 전설의 물조리개!",need:60},
+  {id:"star",emoji:"⭐",name:"스타드롭",desc:"물 85회 달성!\n알 수 없는 힘이 솟구친다...",need:85},
+  {id:"pris",emoji:"💎",name:"무지개 파편",desc:"물 120회 달성!\n우주에서 가장 단단한 광물!",need:120},
 ];
+
 const LEVELS=[
   {min:0,name:"초보 농부",sub:"씨앗을 심어볼까요?",next:3},
   {min:3,name:"견습 농부",sub:"싹이 트기 시작했어요!",next:8},
   {min:8,name:"능숙한 농부",sub:"제법 농태가 나네요~",next:15},
-  {min:15,name:"자연의 친구",sub:"작물과 대화하는 수준!",next:25},
-  {min:25,name:"마을의 자랑",sub:"스타듀 밸리 최고의 농장!",next:40},
-  {min:40,name:"전설의 농부",sub:"더 이상 바랄 게 없어요!",next:9999},
+  {min:15,name:"자연의 친구",sub:"댕댕이가 찾아왔어요!",next:25},
+  {min:25,name:"숲의 정령",sub:"식물들이 반겨줘요!",next:40},
+  {min:40,name:"마을의 자랑",sub:"이웃들이 부러워해요!",next:60},
+  {min:60,name:"명예 농부",sub:"마을 회관을 복원했어요!",next:85},
+  {min:85,name:"전설의 농부",sub:"할아버지의 인정...",next:120},
+  {min:120,name:"대지의 지배자",sub:"자연과 물아일체",next:9999},
 ];
-const SNAMES=["황무지 🌱","잡초밭 ✨","새싹 🌿","농장 🏡","대농장 🌳","스타듀 밸리 🌟"];
-let log={},totalW=0,prevUn=[],picking=null;
+
+const SNAMES=["황무지 🌱","잡초밭 ✨","새싹 🌿","농장 🏡","대농장 🌳","마을 명소 🌷","스타듀 밸리 🌟","에덴 동산 🕊️"];
+let log={}, counts={}, totalW=0, prevUn=[], picking=null;
+let streak=0, lastWater=null; // ⭐ 콤보(스트릭) 시스템 변수
 let animReq, charX = 180, charDir = 1, walkTick = 0;
+let dogX = 50, dogDir = -1; // 댕댕이 좌표
+let currentWeather = 'clear'; 
 
 const toS=()=>new Date().toISOString().split("T")[0];
 const addD=(s,n)=>{const d=new Date(s);d.setDate(d.getDate()+n);return d.toISOString().split("T")[0];};
-const getDL=s=>{const a=new Date();a.setHours(0,0,0,0);const b=new Date(s);b.setHours(0,0,0,0);return Math.ceil((b-a)/864e5);};
+const getDL=s=>{const a=new Date();a.setHours(0,0,0,0);const b=new Date(s);b.setHours(0,0,0,0);return Math.round((b-a)/864e5);};
 const fmt=s=>{if(!s)return"";const d=new Date(s);return`${d.getMonth()+1}/${d.getDate()}`;};
 const fmtF=s=>{if(!s)return"";const d=new Date(s);return`${d.getMonth()+1}월 ${d.getDate()}일`;};
-function load(){try{const d=JSON.parse(localStorage.getItem("pgva_sdv_nature")||"{}");log=d.log||{};totalW=d.totalW||0;}catch{}}
-function save(){try{localStorage.setItem("pgva_sdv_nature",JSON.stringify({log,totalW}));}catch{}}
+
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem("pgva_sdv_nature")||"{}");
+    log=d.log||{}; counts=d.counts||{}; totalW=d.totalW||0; 
+    streak=d.streak||0; lastWater=d.lastWater||null;
+  }catch{}
+  checkPushNotification(); 
+  fetchRealWeather(); 
+  checkStreakBreak(); // 접속 시 스트릭 깨졌는지 확인
+}
+
+function save(){try{localStorage.setItem("pgva_sdv_nature",JSON.stringify({log, counts, totalW, streak, lastWater}));}catch{}}
 function toast(m){const t=document.getElementById("toastEl");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400);}
+
+// ⭐ 접속 시 스트릭이 끊겼는지(어제 안 줬는지) 체크
+function checkStreakBreak() {
+  if (lastWater) {
+    const diff = getDL(lastWater); 
+    if (diff < -1) { // 2일 이상 지났으면 끊김!
+      streak = 0;
+      save();
+    }
+  }
+}
+
+function fetchRealWeather() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      try {
+        const lat = pos.coords.latitude; const lon = pos.coords.longitude;
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+        const data = await res.json();
+        const code = data.current_weather.weathercode;
+        const rainCodes = [51,53,55,56,57,61,63,65,66,67,80,81,82,95,96,99]; 
+        const snowCodes = [71,73,75,77,85,86]; 
+        if (rainCodes.includes(code)) currentWeather = 'rain';
+        else if (snowCodes.includes(code)) currentWeather = 'snow';
+        else currentWeather = 'clear';
+        render(); 
+      } catch(e) { console.log("날씨 정보를 가져오는 데 실패했습니다."); }
+    }, () => { console.log("위치 권한이 거부되어 기본 날씨(맑음)를 유지합니다."); });
+  }
+}
+
+function talk(){ 
+  let msgs = ["오늘도 화이팅!", "물주기는 타이밍!", "잡초를 뽑아야 하는데...", "농사는 템빨이죠!", "새순이 돋았나 확인해볼까요?"]; 
+  if (currentWeather === 'rain') msgs.push("비가 오네요! 장화 신길 잘했다 ☔");
+  else if (currentWeather === 'snow') msgs.push("앗, 눈이 와요! 작물들이 춥지 않을까요? ⛄");
+  else msgs.push("날씨가 정말 좋네요~ ☀️");
+  if (totalW >= 15) msgs.push("우리 댕댕이 너무 귀엽죠? 🐶");
+  toast(msgs[Math.floor(Math.random()*msgs.length)]); 
+}
+
 function unlocked(){return ITEMS.filter(i=>totalW>=i.need).map(i=>i.id);}
 function checkUnlock(){
   const now=unlocked();
@@ -326,13 +402,73 @@ function checkUnlock(){
   prevUn=[...now];
 }
 function closeUl(){document.getElementById("ulbg").classList.remove("show");}
-function waterNow(id){log[id]=toS();totalW++;save();checkUnlock();picking=null;render();toast("경험치 +1 획득!");}
-function waterDate(id){const v=document.getElementById("di_"+id)?.value;if(v){log[id]=v;totalW++;save();checkUnlock();picking=null;render();toast(fmtF(v)+" 기록 완료!");}}
-function togglePick(id){picking=picking===id?null:id;render();}
-async function reqNotif(){const r=await Notification.requestPermission();render();if(r==="granted")toast("알림이 켜졌습니다!");}
-function gStage(){if(totalW>=40)return 5;if(totalW>=25)return 4;if(totalW>=15)return 3;if(totalW>=8)return 2;if(totalW>=3)return 1;return 0;}
 
-// 펭귄 그리기
+// ⭐ 물주기 실행 시 스트릭 계산 및 숙련도(counts) 증가
+function waterNow(id){
+  const today = toS();
+  log[id] = today;
+  counts[id] = (counts[id] || 0) + 1; // 마스터리 증가
+  totalW++; 
+  
+  // 콤보 로직
+  if (!lastWater) {
+    streak = 1;
+  } else {
+    const diff = getDL(lastWater);
+    if (diff === -1) { streak++; } // 어제 주고 오늘 또 줌
+    else if (diff < -1) { streak = 1; } // 끊겼음
+    // diff === 0 (오늘 이미 준 경우) 유지
+  }
+  lastWater = today;
+
+  save();checkUnlock();picking=null;render();
+  if(streak > 1) toast(`경험치 +1 획득! (🔥 ${streak}일 연속 콤보!)`);
+  else toast("경험치 +1 획득!");
+}
+
+function waterDate(id){
+  const v=document.getElementById("di_"+id)?.value;
+  if(v){
+    log[id]=v;
+    counts[id] = (counts[id] || 0) + 1; // 숙련도는 올려줌
+    save(); picking=null; render(); toast(fmtF(v)+" 기록 완료! (경험치/콤보 미적용)"); 
+  }
+}
+
+function togglePick(id){picking=picking===id?null:id;render();}
+
+async function reqNotif(){
+  const r=await Notification.requestPermission();
+  render();
+  if(r==="granted"){ toast("알림이 켜졌습니다!"); checkPushNotification(); }
+}
+
+function checkPushNotification() {
+  if (('Notification' in window) && Notification.permission === "granted") {
+    const today = toS();
+    const lastNotif = localStorage.getItem("pgva_sdv_last_notif");
+    if (lastNotif !== today) {
+      const urg = PLANTS.filter(p => { const l = log[p.id]; return !l || getDL(addD(l, p.days)) <= 0; });
+      if (urg.length > 0) {
+        new Notification("나의 농장", { body: `목마른 식물이 ${urg.length}개 있어요! 💧 빨리 물조리개를 들어주세요!`, icon: "🌱" });
+        localStorage.setItem("pgva_sdv_last_notif", today);
+      }
+    }
+  }
+}
+
+function gStage(){
+  if(totalW>=85)return 7;
+  if(totalW>=60)return 6;
+  if(totalW>=40)return 5;
+  if(totalW>=25)return 4;
+  if(totalW>=15)return 3;
+  if(totalW>=8)return 2;
+  if(totalW>=3)return 1;
+  return 0;
+}
+
+// 펭귄 농부 도트
 const P_C={_:null, K:'#0d0d0d', B:'#3a3a3a', W:'#fffbf0', Y:'#f8e040', R:'#f8b0d0', e:'#ffffff', A:'#a8d08d', C:'#5090c0'};
 const P_SPR = ["_____KKKK_____", "____KBBBBK____", "___KBBBBBBK___", "__KBBBBBBBBK__", "_KBBWeKeKWeBK_", "KBBBWWWWWBBBBK", "KBBWKeKWeBBBBK", "KBBBWYWYWBBBBK", "KBBBBBBBBBBBBK", "KBBBBBBBBBBBBK", "_KBBBBBBBBBBK_", "__KBBBBBBBBK__", "___KBBBBBBK___", "____KKKKKK____", "___KYYYYYYK___", "____KKKKKK____"];
 const H_SPR = ["_____eYYYYYYe____", "____eYRRRRRRYe___", "__eeYRRRRRRRRYes_", "_YRRRRRRRRRRRRRYs"];
@@ -362,116 +498,105 @@ function drawChar(ctx, scale=4, isWalking=false){
     const canX = isWalking ? -4 : -3; 
     C_SPR.forEach((row, ry) => {
       [...row].forEach((ch, rx) => {
-        let col = P_C[ch]; if(col){ ctx.fillStyle = col; ctx.fillRect((rx + canX) * scale, (ry + 8) * scale, scale, scale); }
+        let col = ul.includes('gcan') && ch==='C' ? '#ffcc00' : P_C[ch]; 
+        if(col){ ctx.fillStyle = col; ctx.fillRect((rx + canX) * scale, (ry + 8) * scale, scale, scale); }
       });
     });
   }
 }
 
-// 픽셀 소나무 그리기 함수
-function drawPineTree(ctx, tx, ty, scale) {
-  // 나무 기둥
-  ctx.fillStyle = '#5c2400';
-  ctx.fillRect(tx - 2*scale, ty, 4*scale, 8*scale);
-  
-  // 잎 (3단)
-  ctx.fillStyle = '#2d5c1e'; // 어두운 초록
-  ctx.beginPath(); ctx.moveTo(tx, ty - 15*scale); ctx.lineTo(tx + 12*scale, ty + 2*scale); ctx.lineTo(tx - 12*scale, ty + 2*scale); ctx.fill();
-  ctx.fillStyle = '#3a7c28'; // 중간 초록
-  ctx.beginPath(); ctx.moveTo(tx, ty - 25*scale); ctx.lineTo(tx + 10*scale, ty - 5*scale); ctx.lineTo(tx - 10*scale, ty - 5*scale); ctx.fill();
-  ctx.fillStyle = '#4aa338'; // 밝은 초록
-  ctx.beginPath(); ctx.moveTo(tx, ty - 35*scale); ctx.lineTo(tx + 8*scale, ty - 15*scale); ctx.lineTo(tx - 8*scale, ty - 15*scale); ctx.fill();
+// ⭐ 귀여운 댕댕이 픽셀 (레벨 15 이상에서 등장)
+const D_C = {_:null, K:'#301b0d', B:'#d48e55', W:'#ffffff'};
+const DOG_SPR = [
+  "___KKK____",
+  "__KBBBK___",
+  "_KKBKWK___",
+  "_KBBBBK_K_",
+  "__KBBKKKBK",
+  "__KBBBBBBK",
+  "___KWBBBWK",
+  "___KK__KK_"
+];
+
+function drawDog(ctx, scale) {
+  DOG_SPR.forEach((row,ry)=>{
+    [...row].forEach((ch,rx)=>{
+      let col=D_C[ch];
+      if(col){ ctx.fillStyle=col; ctx.fillRect(rx*scale,ry*scale,scale,scale); }
+    });
+  });
 }
 
-// 아름다운 정원 배경 그리기 (집 철거 완료!)
-function drawGardenBg(ctx, W, H) {
+function drawPineTree(ctx, tx, ty, scale, tick) {
+  ctx.save(); ctx.translate(tx, ty);
+  ctx.fillStyle = currentWeather === 'snow' ? '#cfbdae' : '#5c2400'; ctx.fillRect(-2*scale, 0, 4*scale, 8*scale);
+  const sway = Math.sin(tick * 0.03 + tx) * 0.08; ctx.rotate(sway);
+  ctx.fillStyle = currentWeather === 'snow' ? '#ffffff' : '#2d5c1e'; ctx.beginPath(); ctx.moveTo(0, -15*scale); ctx.lineTo(12*scale, 2*scale); ctx.lineTo(-12*scale, 2*scale); ctx.fill();
+  ctx.fillStyle = currentWeather === 'snow' ? '#e2f1f8' : '#3a7c28'; ctx.beginPath(); ctx.moveTo(0, -25*scale); ctx.lineTo(10*scale, -5*scale); ctx.lineTo(-10*scale, -5*scale); ctx.fill();
+  ctx.fillStyle = currentWeather === 'snow' ? '#c8e1eb' : '#4aa338'; ctx.beginPath(); ctx.moveTo(0, -35*scale); ctx.lineTo(8*scale, -15*scale); ctx.lineTo(-8*scale, -15*scale); ctx.fill();
+  ctx.restore();
+}
+
+function drawGardenBg(ctx, W, H, tick) {
   const st = gStage();
-  
-  // 1. 따뜻한 노을빛 하늘
-  let skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.4);
-  skyGrad.addColorStop(0, '#87CEEB'); // 하늘색
-  skyGrad.addColorStop(1, '#FFDAB9'); // 노을빛
-  ctx.fillStyle = skyGrad;
-  ctx.fillRect(0, 0, W, H * 0.4);
+  const hour = new Date().getHours();
+  let skyTop, skyBot, sunColor, sunY, isNight = false;
 
-  // 둥근 해
-  ctx.fillStyle = 'rgba(255, 215, 0, 0.8)';
-  ctx.beginPath(); ctx.arc(W - 40, 40, 18, 0, Math.PI * 2); ctx.fill();
+  if (currentWeather === 'rain') { skyTop = '#5c6670'; skyBot = '#8b97a3'; sunColor = 'rgba(255, 255, 255, 0)'; sunY = 40; } 
+  else if (currentWeather === 'snow') { skyTop = '#aebbc9'; skyBot = '#d2dce6'; sunColor = 'rgba(255, 255, 255, 0)'; sunY = 40; } 
+  else if (hour >= 6 && hour < 17) { skyTop = '#4CA1AF'; skyBot = '#C4E0E5'; sunColor = 'rgba(255, 223, 0, 0.9)'; sunY = 40; } 
+  else if (hour >= 17 && hour < 20) { skyTop = '#FF4E50'; skyBot = '#F9D423'; sunColor = 'rgba(255, 140, 0, 0.8)'; sunY = 70; } 
+  else { isNight = true; skyTop = '#0f2027'; skyBot = '#203a43'; sunColor = 'rgba(255, 255, 255, 0.9)'; sunY = 30; }
 
-  // 2. 푸른 잔디밭
-  ctx.fillStyle = '#64a321';
+  let skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.4); skyGrad.addColorStop(0, skyTop); skyGrad.addColorStop(1, skyBot);
+  ctx.fillStyle = skyGrad; ctx.fillRect(0, 0, W, H * 0.4);
+  if (isNight && currentWeather === 'clear') { ctx.fillStyle = '#FFF'; for(let i=0; i<15; i++) { ctx.fillRect((i*37 + hour*10) % W, (i*23) % (H*0.35), 2, 2); } }
+  ctx.fillStyle = sunColor; ctx.beginPath(); ctx.arc(W - 40, sunY, 18, 0, Math.PI * 2); ctx.fill();
+
+  if (currentWeather === 'snow') ctx.fillStyle = '#f0f4f8'; else if (currentWeather === 'rain') ctx.fillStyle = '#558a1c'; else ctx.fillStyle = '#64a321'; 
   ctx.fillRect(0, H * 0.4, W, H * 0.6);
-  
-  // 잔디 디테일 (랜덤하게 콕콕 찍은 점들)
-  ctx.fillStyle = '#427814';
-  for(let i=10; i<W; i+=25) {
-     for(let j=H*0.4 + 10; j<H; j+=20) {
-        ctx.fillRect(i + (j%3)*5, j, 4, 4);
-        ctx.fillRect(i + (j%3)*5 + 4, j - 4, 4, 4);
-     }
-  }
+  ctx.fillStyle = currentWeather === 'snow' ? '#d1e1e8' : '#427814';
+  for(let i=10; i<W; i+=25) { for(let j=H*0.4 + 10; j<H; j+=20) { ctx.fillRect(i + (j%3)*5, j, 4, 4); ctx.fillRect(i + (j%3)*5 + 4, j - 4, 4, 4); } }
 
-  // 3. 양쪽 끝을 감싸는 소나무들
-  drawPineTree(ctx, 30, H*0.4 + 10, 2);
-  drawPineTree(ctx, W - 25, H*0.4 + 15, 2.5);
-  drawPineTree(ctx, 15, H*0.4 + 40, 3);
-  drawPineTree(ctx, W - 40, H*0.4 + 50, 2);
+  drawPineTree(ctx, 30, H*0.4 + 10, 2, tick); drawPineTree(ctx, W - 25, H*0.4 + 15, 2.5, tick);
+  drawPineTree(ctx, 15, H*0.4 + 40, 3, tick); drawPineTree(ctx, W - 40, H*0.4 + 50, 2, tick);
 
-  // 4. 넓고 아름다운 밭
-  const px = W/2 - 80;
-  const py = H * 0.55;
-  const pW = 160;
-  const pH = 60;
-  
-  // 밭 나무 울타리
-  ctx.fillStyle = '#5c2400';
-  ctx.fillRect(px - 4, py - 4, pW + 8, 4); // 위
-  ctx.fillRect(px - 4, py + pH, pW + 8, 4); // 아래
-  ctx.fillRect(px - 4, py - 4, 4, pH + 8); // 왼쪽
-  ctx.fillRect(px + pW, py - 4, 4, pH + 8); // 오른쪽
-  
-  // 흙바닥
-  ctx.fillStyle = '#a2653e';
-  ctx.fillRect(px, py, pW, pH); 
-  // 고랑
-  ctx.fillStyle = '#743f1f'; 
-  for(let i=1; i<4; i++) { ctx.fillRect(px, py + i*15, pW, 2); } 
+  const px = W/2 - 80, py = H * 0.55, pW = 160, pH = 60;
+  ctx.fillStyle = currentWeather === 'snow' ? '#ffffff' : '#5c2400';
+  ctx.fillRect(px - 4, py - 4, pW + 8, 4); ctx.fillRect(px - 4, py + pH, pW + 8, 4); 
+  ctx.fillRect(px - 4, py - 4, 4, pH + 8); ctx.fillRect(px + pW, py - 4, 4, pH + 8);
+  ctx.fillStyle = currentWeather === 'snow' ? '#cfbdae' : (currentWeather === 'rain' ? '#8a522f' : '#a2653e'); ctx.fillRect(px, py, pW, pH); 
+  ctx.fillStyle = currentWeather === 'snow' ? '#bca897' : '#743f1f'; for(let i=1; i<4; i++) { ctx.fillRect(px, py + i*15, pW, 2); } 
 
-  // 5. 작물 묘사 (디테일 업업!)
-  if(st >= 1) { 
-    ctx.fillStyle='#94ff33';
-    for(let i=0; i<4; i++){ for(let j=0; j<7; j++){ ctx.fillRect(px + 12 + j*22, py + 5 + i*15, 6, 6); } }
-  }
+  if(st >= 1) { ctx.fillStyle='#94ff33'; for(let i=0; i<4; i++){ for(let j=0; j<7; j++){ ctx.fillRect(px + 12 + j*22, py + 5 + i*15, 6, 6); } } }
   if(st >= 3) { 
-    ctx.fillStyle='#348400';
-    for(let i=0; i<4; i++){ for(let j=0; j<7; j++){ ctx.beginPath(); ctx.arc(px + 15 + j*22, py + 8 + i*15, 6, 0, Math.PI*2); ctx.fill(); } }
+    ctx.fillStyle='#348400'; for(let i=0; i<4; i++){ for(let j=0; j<7; j++){ ctx.beginPath(); ctx.arc(px + 15 + j*22, py + 8 + i*15, 6, 0, Math.PI*2); ctx.fill(); } }
+    let scX = px + pW - 15, scY = py - 10; ctx.fillStyle='#5c2400'; ctx.fillRect(scX, scY, 4, 25); ctx.fillRect(scX-12, scY+8, 28, 4);
+    ctx.fillStyle='#1840a0'; ctx.fillRect(scX-8, scY+8, 20, 14); ctx.fillStyle='#f8e040'; ctx.fillRect(scX-6, scY-4, 16, 12);
+    ctx.fillStyle='#000'; ctx.fillRect(scX-2, scY, 2, 2); ctx.fillRect(scX+4, scY, 2, 2); ctx.fillStyle='#6a0000'; ctx.fillRect(scX-10, scY-6, 24, 3); ctx.fillRect(scX-4, scY-12, 12, 6);
   }
   if(st >= 4) { 
-    // 예쁜 보라색과 빨간색 열매들
-    ctx.fillStyle='#9868e8'; ctx.beginPath(); ctx.arc(px + 37, py + 23, 4, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(px + 81, py + 38, 4, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle='#f06858'; ctx.beginPath(); ctx.arc(px + 103, py + 8, 4, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(px + 125, py + 53, 4, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle='#9868e8'; ctx.beginPath(); ctx.arc(px + 37, py + 23, 4, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(px + 81, py + 38, 4, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle='#f06858'; ctx.beginPath(); ctx.arc(px + 103, py + 8, 4, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(px + 125, py + 53, 4, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#2d5c1e'; ctx.fillRect(px + 30, py - 20, 5, 20); ctx.fillRect(px + 80, py - 20, 5, 20);
+    ctx.beginPath(); ctx.arc(px + 55, py - 20, 25, Math.PI, 0); ctx.lineWidth = 4; ctx.strokeStyle = '#2d5c1e'; ctx.stroke(); ctx.lineWidth = 1;
+    ctx.fillStyle = '#ff99cc'; ctx.beginPath(); ctx.arc(px + 35, py - 35, 5, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(px + 75, py - 35, 5, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(px + 55, py - 45, 5, 0, Math.PI*2); ctx.fill();
+  }
+  if(st >= 5) { 
+    ctx.fillStyle = '#9eaba6'; for(let i=0; i<4; i++) { ctx.fillRect(px + 40 + Math.sin(i)*5, py + pH + 8 + i*10, 30, 6); }
+    ctx.fillStyle = '#4fa8ff'; ctx.beginPath(); ctx.ellipse(W - 40, H*0.8, 30, 12, 0, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = '#2b7bc7'; ctx.beginPath(); ctx.ellipse(W - 40, H*0.8, 25, 9, 0, 0, Math.PI*2); ctx.fill(); ctx.fillStyle = '#348400'; ctx.beginPath(); ctx.arc(W - 50, H*0.8 - 2, 4, 0, Math.PI*2); ctx.fill();
+  }
+  if(st >= 6) { 
+    ctx.fillStyle='#ffcc00'; ctx.beginPath(); ctx.arc(px + 50, py + 20, 5, 0, Math.PI*2); ctx.fill(); ctx.beginPath(); ctx.arc(px + 110, py + 40, 5, 0, Math.PI*2); ctx.fill();
+    let fx = 40, fy = H * 0.75; ctx.fillStyle = '#b0bec5'; ctx.fillRect(fx - 20, fy, 40, 10); ctx.fillRect(fx - 10, fy - 15, 20, 15); ctx.fillRect(fx - 15, fy - 20, 30, 5);
+    ctx.fillStyle = `rgba(100, 200, 255, ${0.6 + Math.sin(tick*0.3)*0.2})`; ctx.beginPath(); ctx.moveTo(fx, fy - 20); ctx.lineTo(fx - 15, fy - 35); ctx.lineTo(fx + 15, fy - 35); ctx.fill();
+  }
+  if(st >= 7) {
+    for(let i=0; i<15; i++) { let alpha = Math.max(0.1, Math.abs(Math.sin(tick*0.05 + i))); ctx.fillStyle = `rgba(255, 255, 100, ${alpha})`; ctx.beginPath(); ctx.arc((i * 47 + tick*0.8) % W, H*0.4 + (i * 23 + tick*0.5) % (H*0.6), 2.5, 0, Math.PI*2); ctx.fill(); }
   }
 
-  // 6. 감성 폭발 허수아비 (레벨 15 이상)
-  if(st >= 3) {
-      let scX = px + pW - 15;
-      let scY = py - 10;
-      // 막대기
-      ctx.fillStyle='#5c2400'; ctx.fillRect(scX, scY, 4, 25);
-      // 팔
-      ctx.fillRect(scX-12, scY+8, 28, 4);
-      // 몸통(파란 셔츠)
-      ctx.fillStyle='#1840a0'; ctx.fillRect(scX-8, scY+8, 20, 14);
-      // 호박 머리
-      ctx.fillStyle='#f8e040'; ctx.fillRect(scX-6, scY-4, 16, 12);
-      // 눈
-      ctx.fillStyle='#000'; ctx.fillRect(scX-2, scY, 2, 2); ctx.fillRect(scX+4, scY, 2, 2);
-      // 챙 넓은 모자
-      ctx.fillStyle='#6a0000'; ctx.fillRect(scX-10, scY-6, 24, 3);
-      ctx.fillRect(scX-4, scY-12, 12, 6);
-  }
+  if (currentWeather === 'rain') { ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; for(let i=0; i<40; i++) { ctx.fillRect((i * 13 + tick * 4) % W, (i * 27 + tick * 14) % H, 1.5, 9); } } 
+  else if (currentWeather === 'snow') { ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; for(let i=0; i<40; i++) { ctx.beginPath(); ctx.arc((i * 17 + Math.sin(tick*0.05 + i)*15) % W, (i * 23 + tick * 3) % H, Math.random()*1.5 + 1.5, 0, Math.PI*2); ctx.fill(); } }
 }
 
 function renderGardenLoop() {
@@ -479,27 +604,41 @@ function renderGardenLoop() {
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
   
-  drawGardenBg(ctx, W, H);
+  drawGardenBg(ctx, W, H, walkTick);
 
-  // 캐릭터 걷기 로직 (넓어진 마당을 활보!)
+  // 캐릭터 걷기
   charX += 0.8 * charDir;
   if(charX > W - 40) charDir = -1;
   if(charX < 20) charDir = 1;
   walkTick++;
 
   const bounce = Math.abs(Math.sin(walkTick * 0.15)) * 4;
-
   ctx.save();
   const scale = 2.5; 
-  // 캐릭터가 밭 바로 앞(위쪽)을 걸어다니도록 Y축 조정
   ctx.translate(charX, (H * 0.55) - 30 - bounce); 
-
-  if (charDir === -1) {
-     ctx.scale(-1, 1);
-     ctx.translate(-14 * scale, 0); 
-  }
+  if (charDir === -1) { ctx.scale(-1, 1); ctx.translate(-14 * scale, 0); }
   drawChar(ctx, scale, true); 
   ctx.restore();
+
+  // ⭐ 댕댕이 걷기 (레벨 15 달성 시)
+  if (totalW >= 15) {
+    dogX += 1.2 * dogDir; // 농부보다 조금 빠름
+    if(dogX > W - 30) dogDir = -1;
+    if(dogX < 10) dogDir = 1;
+    const dogBounce = Math.abs(Math.sin(walkTick * 0.25)) * 3; // 꼬물꼬물
+    ctx.save();
+    ctx.translate(dogX, (H * 0.65) - dogBounce); // 농부보다 살짝 아래 배치
+    if (dogDir === -1) { ctx.scale(-1, 1); ctx.translate(-10 * scale, 0); }
+    drawDog(ctx, scale);
+    ctx.restore();
+  }
+
+  // 시간/날씨 오버레이 필터
+  const hour = new Date().getHours();
+  if (currentWeather === 'rain') { ctx.fillStyle = 'rgba(0, 20, 40, 0.15)'; ctx.fillRect(0, 0, W, H); } 
+  else if (currentWeather === 'snow') { ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; ctx.fillRect(0, 0, W, H); } 
+  else if (hour >= 17 && hour < 20) { ctx.fillStyle = 'rgba(255, 60, 0, 0.15)'; ctx.fillRect(0, 0, W, H); } 
+  else if (hour >= 20 || hour < 6) { ctx.fillStyle = 'rgba(0, 10, 40, 0.45)'; ctx.fillRect(0, 0, W, H); }
 
   animReq = requestAnimationFrame(renderGardenLoop);
 }
@@ -507,9 +646,22 @@ function renderGardenLoop() {
 function render(){
   const d=new Date();const wk=['일','월','화','수','목','금','토'];
   document.getElementById('hDate').textContent=`${d.getMonth()+1}월 ${d.getDate()}일 (${wk[d.getDay()]})`;
+  
+  // ⭐ 스트릭(콤보) 표시
+  const streakEl = document.getElementById('hStreak');
+  if (streak > 0) {
+    streakEl.style.display = 'inline-flex';
+    streakEl.textContent = `🔥 ${streak}일 연속`;
+  } else {
+    streakEl.style.display = 'none';
+  }
+
   const urg=PLANTS.filter(p=>{const l=log[p.id];return!l||getDL(addD(l,p.days))<=0;});
   const tg=document.getElementById('hTag');
+  
   if(urg.length){tg.style.borderColor='var(--red1)'; tg.style.color='var(--red1)'; tg.textContent=`! ${urg.length}개 필요 !`;}
+  else if(currentWeather === 'rain'){tg.style.borderColor='#3b82f6'; tg.style.color='#3b82f6'; tg.textContent='- 실제 비 오는 날 ☔ -';} 
+  else if(currentWeather === 'snow'){tg.style.borderColor='#ffffff'; tg.style.background='#8eb3d9'; tg.style.color='#ffffff'; tg.textContent='- 실제 눈 오는 날 ⛄ -';} 
   else{tg.style.borderColor='var(--green2)'; tg.style.color='var(--green2)'; tg.textContent='- 이상 없음 -';}
   
   document.getElementById('stageName').textContent=SNAMES[gStage()];
@@ -540,6 +692,7 @@ function render(){
   
   const sorted=[...PLANTS].sort((a,b)=>{const da=log[a.id]?getDL(addD(log[a.id],a.days)):-999;const db=log[b.id]?getDL(addD(log[b.id],b.days)):-999;return da-db;});
   const list=document.getElementById('plantList');list.innerHTML='';
+  
   sorted.forEach(p=>{
     const last=log[p.id],next=last?addD(last,p.days):null,dl=next?getDL(next):null;
     const isL=dl!==null&&dl<=0,isS=dl!==null&&dl>0&&dl<=2,isN=!last;
@@ -547,13 +700,32 @@ function render(){
     const isPick=picking===p.id,tp=isL?'late':isS?'soon':isN?'none':'ok';
     const tagT=isN?'기록없음':isL?`+${Math.abs(dl)}일 지남`:dl===0?'오늘 물주기!':dl+'일 남음';
     const btnT=isN?'물조리개 쓰기':isL?'지금 물주기':'물주기 완료';
+    
+    // ⭐ 숙련도 (마스터리) 로직
+    const count = counts[p.id] || 0;
+    let badge = '';
+    let mClass = '';
+    if (count >= 10) { badge = '👑'; mClass = 'chip-mastery'; } // 10번 이상 왕관
+    else if (count >= 5) { badge = '🥈'; } // 5번 이상 은메달
+
     let chips=`<span class="chip">주기: ${p.days}일</span>`;
-    if(last)chips+=`<span class="chip">마지막: ${fmt(last)}</span>`;
-    if(next)chips+=`<span class="chip">다음: ${fmt(next)}</span>`;
+    if(count > 0) chips+=`<span class="chip ${mClass}">누적 물주기: ${count}회</span>`; // 누적 횟수 표시
+    if(last) chips+=`<span class="chip">마지막: ${fmt(last)}</span>`;
+    
     const pgH=last?`<div class="pg-wrap"><div class="pg-labels"><span>작물 상태</span><span>${Math.round(prog)}%</span></div><div class="pg-track"><div class="pg-fill pgf-${tp==='none'?'ok':tp}" style="width:${prog}%"></div></div></div>`:'';
     const actH=isPick?`<div class="pkbox"><div class="pk-lbl">날짜 선택</div><input id="di_${p.id}" class="pk-in" type="date" max="${toS()}" value="${last||toS()}"><div class="pk-btns"><button class="pk-ok" onclick="waterDate('${p.id}')">확인</button><button class="pk-no" onclick="togglePick('${p.id}')">취소</button></div></div>`:`<div class="brow"><button class="btnw bw-${tp==='none'?'none':tp}" onclick="waterNow('${p.id}')">${btnT}</button><button class="btn-cal" onclick="togglePick('${p.id}')">📅</button></div>`;
+    
     const card=document.createElement('div');card.className=`pcard sdv-box`;
-    card.innerHTML=`<div class="pc-top"><div class="pc-icon">${p.emoji}</div><div class="pc-names"><div class="pc-name">${p.name}</div><div class="pc-en">${p.en}</div></div><div class="pc-tag pt-${tp}">${tagT}</div></div><div class="pc-tip">${p.tip}</div><div class="chips">${chips}</div>${pgH}${actH}`;
+    card.innerHTML=`
+      <div class="pc-top">
+        <div class="pc-icon">${p.emoji} <div class="pc-mastery-badge">${badge}</div></div>
+        <div class="pc-names"><div class="pc-name">${p.name}</div><div class="pc-en">${p.en}</div></div>
+        <div class="pc-tag pt-${tp}">${tagT}</div>
+      </div>
+      <div class="pc-tip">${p.tip}</div>
+      <div class="chips">${chips}</div>
+      ${pgH}${actH}
+    `;
     list.appendChild(card);
   });
 }
