@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -78,7 +78,7 @@ body {
 }
 .tb-streak { background: var(--wood4); border-color: #ff4500; color: #d32f2f; font-weight: bold; }
 
-.scene-wrap { overflow: hidden; padding-bottom: 4px; }
+.scene-wrap { overflow: hidden; padding-bottom: 4px; position:relative; }
 .scene-top {
   padding: 8px 12px;
   display: flex; align-items:center; justify-content:space-between;
@@ -87,7 +87,7 @@ body {
 }
 .scene-ttl { font-size:14px; color: var(--txt); }
 .scene-stg { font-size:12px; color: var(--txt2); }
-#gardenCanvas { display:block; width:100%; image-rendering:pixelated; border-bottom: 4px solid var(--wood2); }
+#gardenCanvas { display:block; width:100%; image-rendering:pixelated; border-bottom: 4px solid var(--wood2); cursor:pointer; }
 
 .char-section { display: flex; align-items: stretch; padding: 8px; }
 .portrait-col {
@@ -141,7 +141,11 @@ body {
 .slot-need { position:absolute; bottom:2px; right:4px; font-size:12px; color:var(--txt); }
 
 .plants-section { margin: 20px 12px 0; }
-.plants-hdr { font-size:18px; color: var(--wood3); text-shadow: 2px 2px 0 var(--wood1); padding: 0 4px 10px; }
+.plants-hdr { display:flex; justify-content:space-between; align-items:center; padding: 0 4px 10px; }
+.plants-hdr-ttl { font-size:18px; color: var(--wood3); text-shadow: 2px 2px 0 var(--wood1); }
+.add-btn { background: var(--wood3); border: 2px solid var(--wood1); border-radius: 4px; padding: 6px 10px; font-size: 14px; font-family:inherit; color: var(--txt); cursor: pointer; display:flex; align-items:center; gap:4px; box-shadow: 0 2px 0 var(--wood1); }
+.add-btn:active { transform: translateY(2px); box-shadow: 0 0 0 var(--wood1); }
+
 .pcard { margin-bottom: 12px; position:relative; padding: 12px; }
 .pc-top { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
 .pc-icon {
@@ -150,11 +154,9 @@ body {
   font-size:28px; background: var(--parch2); border: 2px solid var(--wood1);
   box-shadow: inset 2px 2px 0px var(--wood4), inset -2px -2px 0px var(--wood2); position:relative;
 }
-.pc-mastery-badge {
-  position: absolute; top:-8px; right:-8px; font-size:18px; filter:drop-shadow(1px 1px 0 rgba(0,0,0,0.5));
-}
+.pc-mastery-badge { position: absolute; top:-8px; right:-8px; font-size:18px; filter:drop-shadow(1px 1px 0 rgba(0,0,0,0.5)); }
 .pc-names { flex:1; min-width:0; }
-.pc-name { font-size:18px; color:var(--txt); margin-bottom: 4px; }
+.pc-name { font-size:18px; color:var(--txt); margin-bottom: 4px; padding-right: 20px; }
 .pc-en { font-size:12px; color:var(--txt3); }
 .pc-tag { font-size:12px; padding:6px 10px; flex-shrink:0; white-space:nowrap; border: 2px solid var(--wood1); }
 .pt-ok   { background:var(--green3); color:var(--txt); }
@@ -204,6 +206,32 @@ body {
 .pk-ok:active { transform:translate(2px,2px); }
 .pk-no { height:40px; padding:0 16px; cursor:pointer; font-size:14px; color:var(--txt); font-family:inherit; background:var(--parch2); border:2px solid var(--wood1); }
 
+/* ⭐ 수정된 X 삭제 버튼 스타일 (모서리 위로 튀어나오게) */
+.del-btn { 
+  position: absolute; 
+  top: -8px; 
+  right: -8px; 
+  width: 24px; 
+  height: 24px; 
+  background: var(--wood3); 
+  border: 2px solid var(--wood1); 
+  color: var(--red2); 
+  font-size: 12px; 
+  font-weight: bold;
+  cursor: pointer; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.3); 
+  z-index: 10; 
+  padding: 0;
+}
+.del-btn:active { 
+  transform: translate(1px, 1px); 
+  box-shadow: none; 
+}
+
+/* 모달 및 탭 CSS */
 .bspc { height:60px; }
 .toast {
   position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(16px);
@@ -218,7 +246,7 @@ body {
 .ulbox {
   background:var(--parch); border: 4px solid #9e450b;
   box-shadow: inset 0 0 0 4px #d18a41, 0 10px 40px rgba(0,0,0,0.7);
-  padding:24px; text-align:center; width:84%; max-width:320px;
+  padding:20px; text-align:center; width:90%; max-width:360px;
 }
 .ul-stars { font-size:24px; color:var(--gold); margin-bottom:10px; text-shadow:2px 2px 0px var(--wood1); }
 .ul-ttl { font-size:20px; color:var(--txt); margin-bottom:16px; }
@@ -230,6 +258,25 @@ body {
   box-shadow: inset 2px 2px 0px rgba(255,255,255,0.4), inset -2px -2px 0px rgba(0,0,0,0.2);
 }
 .ul-btn:active { transform:translate(2px,2px); }
+
+/* 입양 모달 CSS */
+.tab-row { display:flex; gap:4px; margin-bottom:16px; }
+.tab-btn { flex:1; height:40px; background:var(--parch2); border:2px solid var(--wood1); cursor:pointer; font-family:inherit; font-size:15px; color:var(--txt2); }
+.tab-btn.active { background:var(--green3); color:var(--txt); font-weight:bold; }
+.search-in { width:100%; height:44px; border:2px solid var(--wood1); padding:0 12px; font-family:inherit; font-size:16px; margin-bottom:12px; background:var(--wood4); color:var(--txt); outline:none; }
+.res-list { display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; text-align:left; margin-bottom:12px; padding-right:4px;}
+.res-item { background:var(--wood5); border:2px solid var(--wood1); padding:10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
+.res-item:active { transform:translate(2px,2px); }
+.res-info { display:flex; align-items:center; gap:10px; }
+.res-em { font-size:24px; }
+.res-txts { display:flex; flex-direction:column; gap:2px; }
+.res-name { font-size:16px; color:var(--txt); }
+.res-days { font-size:12px; color:var(--txt2); }
+.res-add-btn { background:var(--green3); border:2px solid var(--wood1); padding:4px 8px; font-family:inherit; cursor:pointer; }
+
+.custom-form { display:flex; flex-direction:column; gap:10px; text-align:left; margin-bottom:12px; }
+.c-lbl { font-size:14px; color:var(--txt); }
+.c-in { width:100%; height:40px; border:2px solid var(--wood1); padding:0 10px; font-family:inherit; font-size:16px; background:var(--wood4); color:var(--txt); outline:none; }
 </style>
 </head>
 <body>
@@ -272,7 +319,10 @@ body {
   <div id="notifWrap"></div>
 
   <div class="plants-section">
-    <div class="plants-hdr">▸ 작물 상태</div>
+    <div class="plants-hdr">
+      <div class="plants-hdr-ttl">▸ 내 작물들</div>
+      <button class="add-btn" onclick="openAddModal()">➕ 입양하기</button>
+    </div>
     <div id="plantList"></div>
   </div>
 
@@ -284,10 +334,35 @@ body {
   <div class="ul-em" id="ulEm"></div><div class="ul-desc" id="ulDesc"></div>
   <button class="ul-btn" onclick="closeUl()">가방에 넣기</button>
 </div></div>
+
+<div class="ulbg" id="addModal"><div class="ulbox" style="padding:20px 16px;">
+  <div class="ul-ttl">새 작물 입양하기 🌱</div>
+  <div class="tab-row">
+    <button class="tab-btn active" id="tabBtnDB" onclick="switchTab('db')">도감 검색</button>
+    <button class="tab-btn" id="tabBtnCustom" onclick="switchTab('custom')">직접 등록</button>
+  </div>
+  
+  <div id="tab-db">
+     <input type="text" id="searchInput" class="search-in" placeholder="식물 이름 검색 (예: 금전수)" oninput="renderDB()">
+     <div class="res-list" id="dbResults"></div>
+  </div>
+  
+  <div id="tab-custom" style="display:none;">
+     <div class="custom-form">
+       <div><div class="c-lbl">식물 이름 (애칭)</div><input type="text" id="cName" class="c-in" placeholder="예: 우리집 예쁜이"></div>
+       <div><div class="c-lbl">식물 이모지</div><input type="text" id="cEmoji" class="c-in" placeholder="예: 🌷 (1글자 추천)"></div>
+       <div><div class="c-lbl">물주기 간격 (일)</div><input type="number" id="cDays" class="c-in" placeholder="예: 7"></div>
+     </div>
+     <button class="ul-btn" onclick="addCustom()">내 정원에 등록!</button>
+  </div>
+  
+  <button class="ul-btn" style="margin-top:12px; background:var(--parch2);" onclick="closeAddModal()">닫기</button>
+</div></div>
+
 <div class="toast" id="toastEl"></div>
 
 <script>
-const PLANTS=[
+const BASE_PLANTS=[
   {id:"asp",name:"아스파라거스",en:"Asparagus Fern",days:3,emoji:"🌾",tip:"흙 표면이 마르면 바로 물주기."},
   {id:"mon",name:"몬스테라",en:"Monstera Spruceana",days:7,emoji:"🌿",tip:"잎이 처지면 물 부족 신호."},
   {id:"alb",name:"알부카 스피랄리스",en:"Albuca Spiralis",days:10,emoji:"🌀",tip:"봄·가을 더 자주. 과습 주의!"},
@@ -299,6 +374,111 @@ const PLANTS=[
   {id:"hiv",name:"하트 아이비",en:"Heart Leaf Ivy",days:5,emoji:"🌿",tip:"흙 표면이 마르면 흠뻑 물주기. 과습 주의!"},
   {id:"avi",name:"아스플레니움 아비스",en:"Asplenium Nidus",days:7,emoji:"🥬",tip:"중심부 새순에 물이 고이지 않게 조심! 겉흙이 마르면 흠뻑 주세요."},
 ];
+
+const PLANT_DB = [
+  {id:"db_1", name:"스투키", en:"Cylindrical Snake Plant", days:30, emoji:"🎍", tip:"한 달에 한 번만 물을 주세요. 과습에 매우 약해요!"},
+  {id:"db_2", name:"금전수", en:"ZZ Plant", days:21, emoji:"💰", tip:"돈이 들어오는 식물! 흙이 완전히 마르면 흠뻑 주세요."},
+  {id:"db_3", name:"행운목", en:"Corn Plant", days:10, emoji:"🪵", tip:"잎사귀에 분무를 자주 해주면 좋아해요."},
+  {id:"db_4", name:"스파티필름", en:"Peace Lily", days:5, emoji:"🕊️", tip:"잎이 축 처지면 물을 달라는 신호예요."},
+  {id:"db_5", name:"스킨답서스", en:"Pothos", days:7, emoji:"🍃", tip:"생명력이 아주 강해요! 겉흙이 마르면 주세요."},
+  {id:"db_6", name:"홍콩야자", en:"Umbrella Tree", days:7, emoji:"🌴", tip:"반양지에서 잘 자라며 흙이 마르면 흠뻑 줍니다."},
+  {id:"db_7", name:"테이블야자", en:"Parlor Palm", days:7, emoji:"🌴", tip:"직사광선을 피하고 분무를 자주 해주세요."},
+  {id:"db_8", name:"아레카야자", en:"Areca Palm", days:7, emoji:"🌴", tip:"천연 가습기! 잎 끝이 마르지 않게 분무해 주세요."},
+  {id:"db_9", name:"벵갈고무나무", en:"Banyan Tree", days:10, emoji:"🌳", tip:"햇빛을 좋아하고 겉흙이 마르면 흠뻑 줍니다."},
+  {id:"db_10", name:"떡갈고무나무", en:"Fiddle Leaf Fig", days:10, emoji:"🌳", tip:"큰 잎에 먼지가 쌓이지 않게 자주 닦아주세요."},
+  {id:"db_11", name:"인도고무나무", en:"Rubber Plant", days:10, emoji:"🌳", tip:"과습을 주의하고 밝은 곳에서 키워주세요."},
+  {id:"db_12", name:"파키라", en:"Money Tree", days:14, emoji:"🌴", tip:"줄기에 물을 저장하므로 건조하게 키우는 게 좋아요."},
+  {id:"db_13", name:"해피트리", en:"Happy Tree", days:10, emoji:"🌳", tip:"통풍이 매우 중요해요. 겉흙이 마르면 흠뻑!"},
+  {id:"db_14", name:"크루시아", en:"Autograph Tree", days:10, emoji:"🌿", tip:"잎이 두꺼워 건조에 강합니다. 과습 주의!"},
+  {id:"db_15", name:"싱고니움", en:"Syngonium", days:5, emoji:"🍃", tip:"반음지에서도 잘 자라며 물을 좋아하는 편이에요."},
+  {id:"db_16", name:"알로카시아", en:"Alocasia", days:7, emoji:"🐘", tip:"과습에 약하니 무름병을 조심해야 해요."},
+  {id:"db_17", name:"칼라데아", en:"Calathea", days:5, emoji:"🦓", tip:"밤낮으로 잎이 움직여요! 높은 습도를 좋아합니다."},
+  {id:"db_18", name:"페페로미아", en:"Peperomia", days:7, emoji:"🟢", tip:"잎이 두꺼워 건조에 강해요. 흙이 마르면 주세요."},
+  {id:"db_19", name:"아이비", en:"English Ivy", days:5, emoji:"🌿", tip:"덩굴을 뻗으며 자랍니다. 흙 표면이 마르면 물주기!"},
+  {id:"db_20", name:"폴리셔스", en:"Polyscias", days:7, emoji:"🌳", tip:"환경 변화에 민감하니 한 자리에서 키우는 게 좋아요."},
+  {id:"db_21", name:"산세베리아", en:"Snake Plant", days:21, emoji:"🐍", tip:"공기정화의 대명사! 한 달에 한 번 줘도 거뜬해요."},
+  {id:"db_22", name:"관음죽", en:"Lady Palm", days:10, emoji:"🎋", tip:"암모니아 제거에 탁월! 그늘에서도 잘 자랍니다."},
+  {id:"db_23", name:"개운죽", en:"Lucky Bamboo", days:10, emoji:"🎋", tip:"수경재배로도 많이 키우는 키우기 쉬운 식물."},
+  {id:"db_24", name:"만년청", en:"Dumb Cane", days:7, emoji:"🌿", tip:"잎의 무늬가 아름답지만 수액에 독성이 있으니 주의!"},
+  {id:"db_25", name:"하월시아", en:"Haworthia", days:14, emoji:"🌵", tip:"반투명한 잎이 매력적이에요. 직사광선은 피해 주세요!"},
+  {id:"db_26", name:"알로에 베라", en:"Aloe Vera", days:21, emoji:"🪴", tip:"햇빛을 좋아하고 건조하게 키워야 잘 자랍니다."},
+  {id:"db_27", name:"아가베", en:"Agave", days:28, emoji:"🏜️", tip:"햇빛을 듬뿍 보여주고 물은 흙이 바싹 말랐을 때 흠뻑!"},
+  {id:"db_28", name:"리톱스", en:"Lithops", days:30, emoji:"🪨", tip:"살아있는 돌! 탈피 기간에는 절대 물을 주면 안 돼요."},
+  {id:"db_29", name:"십이지권", en:"Zebra Plant", days:21, emoji:"🦓", tip:"얼룩말 무늬가 특징인 다육식물. 직사광선 주의!"},
+  {id:"db_30", name:"흑법사", en:"Black Rose", days:14, emoji:"🖤", tip:"햇빛을 많이 받을수록 검은색 잎이 진해져요."},
+  {id:"db_31", name:"방울복랑", en:"Cotyledon", days:14, emoji:"🍇", tip:"포도알처럼 통통한 잎이 매력적! 잎에 물이 닿지 않게 주의."},
+  {id:"db_32", name:"백도선", en:"Bunny Ears Cactus", days:21, emoji:"🐰", tip:"토끼 귀를 닮은 선인장. 미세한 가시를 조심하세요!"},
+  {id:"db_33", name:"만세선인장", en:"Fairy Castle Cactus", days:21, emoji:"🌵", tip:"만세를 하고 있는 귀여운 수형! 흙이 바싹 마르면 주세요."},
+  {id:"db_34", name:"용신목", en:"Blue Myrtle Cactus", days:30, emoji:"🌵", tip:"푸른빛이 도는 튼튼한 선인장. 과습에 매우 취약해요."},
+  {id:"db_35", name:"난봉옥", en:"Bishop's Cap", days:30, emoji:"⭐️", tip:"별 모양을 닮은 가시 없는 선인장."},
+  {id:"db_36", name:"귀면각", en:"Peruvian Apple Cactus", days:30, emoji:"🌵", tip:"길게 쭉쭉 뻗는 기둥 선인장."},
+  {id:"db_37", name:"금호", en:"Golden Barrel Cactus", days:30, emoji:"🟡", tip:"노란 가시가 매력적인 황금술통 선인장."},
+  {id:"db_38", name:"염좌", en:"Jade Plant", days:21, emoji:"🪙", tip:"다육성 관엽식물로 잎이 도톰해요."},
+  {id:"db_39", name:"오로라", en:"Aurora", days:14, emoji:"🌅", tip:"끝이 붉게 물드는 귀여운 다육이."},
+  {id:"db_40", name:"몬스테라 알보", en:"Monstera Albo", days:7, emoji:"🤍", tip:"흰색 무늬가 매력적! 무늬 부분은 타기 쉬워요."},
+  {id:"db_41", name:"필로덴드론 버킨", en:"Philodendron Birkin", days:7, emoji:"🤍", tip:"새잎이 날 때 선명한 하얀 줄무늬가 돋보여요."},
+  {id:"db_42", name:"핑크 프린세스", en:"Pink Princess", days:7, emoji:"🩷", tip:"핫핑크색 잎이 섞여 나오는 매력적인 식물."},
+  {id:"db_43", name:"몬스테라 아단소니", en:"Monstera Adansonii", days:5, emoji:"🧀", tip:"구멍이 뽕뽕 뚫린 치즈 같은 잎! 습도를 좋아해요."},
+  {id:"db_44", name:"형광스킨답서스", en:"Neon Pothos", days:7, emoji:"🌟", tip:"형광빛이 도는 밝은 잎으로 방을 환하게 해줘요."},
+  {id:"db_45", name:"코로키아", en:"Corokia", days:5, emoji:"🕸️", tip:"지그재그 꺾인 가지가 매력적인 식물. 과습 주의!"},
+  {id:"db_46", name:"마오리 소포라", en:"Maori Sophora", days:5, emoji:"🪴", tip:"동화 속 나무처럼 생겼어요. 통풍이 1순위!"},
+  {id:"db_47", name:"유칼립투스 폴리안", en:"Eucalyptus Polyanthemos", days:3, emoji:"🐨", tip:"바람과 햇빛을 매우 좋아해요."},
+  {id:"db_48", name:"올리브나무", en:"Olive Tree", days:7, emoji:"🫒", tip:"햇빛을 아주 좋아해요! 겉흙이 마르면 물을 흠뻑 주세요."},
+  {id:"db_49", name:"레몬트리", en:"Lemon Tree", days:5, emoji:"🍋", tip:"열매가 열릴 때는 물을 더 자주 필요로 해요."},
+  {id:"db_50", name:"무화과나무", en:"Fig Tree", days:5, emoji:"🪴", tip:"성장기에는 물을 많이 먹습니다. 겉흙 마르면 바로!"},
+  {id:"db_51", name:"커피나무", en:"Coffee Tree", days:5, emoji:"☕", tip:"광택이 나는 잎! 물을 좋아하는 편이에요."},
+  {id:"db_52", name:"남천", en:"Nandina", days:7, emoji:"🍁", tip:"가을이면 붉게 단풍이 드는 매력적인 식물."},
+  {id:"db_53", name:"보스턴고사리", en:"Boston Fern", days:3, emoji:"🌾", tip:"습한 환경을 사랑합니다. 분무를 자주 해주세요."},
+  {id:"db_54", name:"아디안텀", en:"Maidenhair Fern", days:2, emoji:"🌾", tip:"잎이 종이처럼 얇아 건조해지면 금방 바스라져요."},
+  {id:"db_55", name:"박쥐란", en:"Staghorn Fern", days:7, emoji:"🦇", tip:"나무에 붙어사는 착생식물! 잎에 물이 고이지 않게 조심."},
+  {id:"db_56", name:"블루스타펀", en:"Blue Star Fern", days:5, emoji:"🌠", tip:"은푸른빛이 도는 오묘한 색감의 고사리."},
+  {id:"db_57", name:"후마타고사리", en:"Rabbit's Foot Fern", days:5, emoji:"🐇", tip:"거미줄 같은 뿌리가 밖으로 자라나는 게 특징!"},
+  {id:"db_58", name:"더블고사리", en:"Double Fern", days:3, emoji:"🌿", tip:"풍성하게 자라는 고사리. 흙을 촉촉하게 유지하세요."},
+  {id:"db_59", name:"무늬아비스", en:"Variegated Bird's Nest", days:7, emoji:"🪶", tip:"가운데 새순 부분에 물이 고이지 않게 가장자리로 주세요."},
+  {id:"db_60", name:"틸란드시아 이오난사", en:"Air Plant", days:4, emoji:"🎐", tip:"흙이 필요 없어요! 일주일에 1~2번 물에 푹 담가주세요."},
+  {id:"db_61", name:"세로그라피카", en:"Xerographica", days:7, emoji:"🪢", tip:"공중식물의 왕. 곱슬거리는 잎이 은빛을 띠어요."},
+  {id:"db_62", name:"수염틸란드시아", en:"Spanish Moss", days:3, emoji:"🌫️", tip:"미세먼지를 먹고 자라요. 흠뻑 적셔주는 게 포인트."},
+  {id:"db_63", name:"호접란", en:"Moth Orchid", days:10, emoji:"🌸", tip:"뿌리가 은회색으로 변했을 때 물을 주면 딱 맞아요."},
+  {id:"db_64", name:"수국", en:"Hydrangea", days:2, emoji:"💮", tip:"물을 엄청나게 좋아해요! 꽃이 피면 물을 매일 확인하세요."},
+  {id:"db_65", name:"시클라멘", en:"Cyclamen", days:5, emoji:"🌺", tip:"꽃이나 잎에 물이 닿지 않게 저면관수로 주는 게 좋아요."},
+  {id:"db_66", name:"베고니아", en:"Begonia", days:5, emoji:"🌸", tip:"잎이 예쁜 식물. 과습에 주의하세요."},
+  {id:"db_67", name:"칼란코에", en:"Kalanchoe", days:10, emoji:"🌺", tip:"다육성 꽃식물이라 흙이 바짝 마른 후 물을 줍니다."},
+  {id:"db_68", name:"제라늄", en:"Geranium", days:5, emoji:"🏵️", tip:"통풍이 잘 되고 햇빛이 많은 곳에서 사시사철 꽃을 피워요."},
+  {id:"db_69", name:"안스리움", en:"Anthurium", days:7, emoji:"❤️", tip:"빨간 불염포가 꽃처럼 보여요. 공중 습도를 높여주세요."},
+  {id:"db_70", name:"장미", en:"Rose", days:3, emoji:"🌹", tip:"통풍과 햇빛이 생명! 물이 마르지 않게 관리하세요."},
+  {id:"db_71", name:"튤립", en:"Tulip", days:3, emoji:"🌷", tip:"구근식물이므로 알뿌리가 썩지 않게 겉흙 마르면 주세요."},
+  {id:"db_72", name:"백합", en:"Lily", days:5, emoji:"🌷", tip:"향기가 아주 짙은 꽃. 꽃에 물이 닿지 않게 조심하세요."},
+  {id:"db_73", name:"해바라기", en:"Sunflower", days:3, emoji:"🌻", tip:"해를 따라다니는 식물! 빛이 가장 잘 드는 곳에 두세요."},
+  {id:"db_74", name:"카네이션", en:"Carnation", days:5, emoji:"💮", tip:"바람이 잘 통하는 곳에서 겉흙이 마르면 물을 듬뿍!"},
+  {id:"db_75", name:"바질", en:"Basil", days:2, emoji:"🌱", tip:"물을 아주 좋아하는 허브! 겉흙이 마르기 전에 주세요."},
+  {id:"db_76", name:"로즈마리", en:"Rosemary", days:3, emoji:"🌿", tip:"통풍이 생명입니다! 물을 자주 주되 흙이 질척이면 안돼요."},
+  {id:"db_77", name:"애플민트", en:"Apple Mint", days:2, emoji:"🌱", tip:"번식력이 엄청납니다. 물을 말리지 말고 키워주세요."},
+  {id:"db_78", name:"페퍼민트", en:"Peppermint", days:2, emoji:"🌿", tip:"상쾌한 향이 나는 허브. 물과 햇빛을 좋아해요."},
+  {id:"db_79", name:"스피어민트", en:"Spearmint", days:2, emoji:"🍃", tip:"달콤한 민트향! 성장 속도가 매우 빠릅니다."},
+  {id:"db_80", name:"라벤더", en:"Lavender", days:3, emoji:"💜", tip:"과습에 아주 취약해요. 통풍이 가장 중요!"},
+  {id:"db_81", name:"레몬밤", en:"Lemon Balm", days:2, emoji:"🍋", tip:"레몬향이 솔솔~ 물을 제때 안 주면 금방 시들어요."},
+  {id:"db_82", name:"타임", en:"Thyme", days:3, emoji:"🌿", tip:"건조에 비교적 강한 허브입니다."},
+  {id:"db_83", name:"오레가노", en:"Oregano", days:3, emoji:"🍕", tip:"요리에 자주 쓰이는 허브. 해가 잘 드는 곳에 두세요."},
+  {id:"db_84", name:"딜", en:"Dill", days:3, emoji:"🌿", tip:"얇고 가느다란 잎. 흙이 마르면 바로 물을 주세요."},
+  {id:"db_85", name:"파슬리", en:"Parsley", days:3, emoji:"🥗", tip:"수분을 좋아하니 겉흙이 마르기 전에 챙겨주세요."},
+  {id:"db_86", name:"고수", en:"Coriander", days:3, emoji:"🌿", tip:"향신료로 유명하죠! 따뜻하고 습한 곳을 좋아해요."},
+  {id:"db_87", name:"방울토마토", en:"Cherry Tomato", days:2, emoji:"🍅", tip:"햇빛과 물을 듬뿍 먹어야 맛있는 열매가 열려요."},
+  {id:"db_88", name:"상추", en:"Lettuce", days:2, emoji:"🥬", tip:"물을 매일같이 먹고 쑥쑥 자라요. 벌레를 조심하세요."},
+  {id:"db_89", name:"대파", en:"Green Onion", days:2, emoji:"🧅", tip:"뿌리만 심어둬도 잘 자라는 국민 식재료."},
+  {id:"db_90", name:"고추", en:"Chili Pepper", days:2, emoji:"🌶️", tip:"햇빛을 아주 많이 필요로 합니다."},
+  {id:"db_91", name:"가지", en:"Eggplant", days:3, emoji:"🍆", tip:"따뜻한 곳에서 키워주세요."},
+  {id:"db_92", name:"딸기", en:"Strawberry", days:2, emoji:"🍓", tip:"꽃이 필 때 물을 말리지 않아야 예쁜 열매가 달려요."},
+  {id:"db_93", name:"블루베리", en:"Blueberry", days:2, emoji:"🫐", tip:"산성 흙에서 잘 자라며 물을 좋아하는 편입니다."},
+  {id:"db_94", name:"율마", en:"Lemon Cypress", days:3, emoji:"🌲", tip:"잎을 쓰다듬으면 피톤치드 향이 나요! 통풍 부족시 금방 갈변해요."},
+  {id:"db_95", name:"마란타", en:"Maranta", days:5, emoji:"🍃", tip:"기도하는 식물! 밤이 되면 잎을 위로 말아 올려요."},
+  {id:"db_96", name:"아글라오네마", en:"Aglaonema", days:7, emoji:"🔴", tip:"영화 '레옹'에 나온 식물. 화려한 무늬가 아름다워요."},
+  {id:"db_97", name:"오색마삭줄", en:"Asian Jasmine", days:5, emoji:"🌈", tip:"햇빛을 받으면 잎이 오색으로 변하는 신기한 덩굴."},
+  {id:"db_98", name:"무늬오징어", en:"Variegated Pothos", days:7, emoji:"🦑", tip:"잎에 불규칙한 무늬가 생기는 매력적인 품종."},
+  {id:"db_99", name:"트리안", en:"Maidenhair Vine", days:3, emoji:"🌿", tip:"동글동글한 작은 잎이 덩굴로 자라나요. 물을 말리면 안 돼요."},
+  {id:"db_100", name:"호야", en:"Hoya", days:10, emoji:"🌸", tip:"별 모양의 예쁜 꽃을 피우는 다육성 식물. 건조하게 키워주세요."}
+];
+
+let customPlants = []; 
 
 const ITEMS=[
   {id:"can", emoji:"🪣",name:"물조리개",desc:"물 3회 달성!\n초보자용 물조리개를 얻었다!",need:3},
@@ -324,11 +504,17 @@ const LEVELS=[
 ];
 
 const SNAMES=["황무지 🌱","잡초밭 ✨","새싹 🌿","농장 🏡","대농장 🌳","마을 명소 🌷","스타듀 밸리 🌟","에덴 동산 🕊️"];
+
 let log={}, counts={}, totalW=0, prevUn=[], picking=null;
-let streak=0, lastWater=null; // ⭐ 콤보(스트릭) 시스템 변수
+let streak=0, lastWater=null; 
 let animReq, charX = 180, charDir = 1, walkTick = 0;
-let dogX = 50, dogDir = -1; // 댕댕이 좌표
+let dogX = 50, dogDir = -1; 
 let currentWeather = 'clear'; 
+
+let lastDogPet = null;
+let forageDate = null;
+let forageItems = []; 
+let heartAnim = 0; 
 
 const toS=()=>new Date().toISOString().split("T")[0];
 const addD=(s,n)=>{const d=new Date(s);d.setDate(d.getDate()+n);return d.toISOString().split("T")[0];};
@@ -341,23 +527,43 @@ function load(){
     const d=JSON.parse(localStorage.getItem("pgva_sdv_nature")||"{}");
     log=d.log||{}; counts=d.counts||{}; totalW=d.totalW||0; 
     streak=d.streak||0; lastWater=d.lastWater||null;
+    customPlants=d.customPlants||[]; 
+    lastDogPet=d.lastDogPet||null;
+    forageDate=d.forageDate||null;
+    forageItems=d.forageItems||[];
   }catch{}
   checkPushNotification(); 
   fetchRealWeather(); 
-  checkStreakBreak(); // 접속 시 스트릭 깨졌는지 확인
+  checkStreakBreak(); 
+  checkDailyEvents(); 
 }
 
-function save(){try{localStorage.setItem("pgva_sdv_nature",JSON.stringify({log, counts, totalW, streak, lastWater}));}catch{}}
+function save(){try{localStorage.setItem("pgva_sdv_nature",JSON.stringify({log, counts, totalW, streak, lastWater, customPlants, lastDogPet, forageDate, forageItems}));}catch{}}
 function toast(m){const t=document.getElementById("toastEl");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2400);}
 
-// ⭐ 접속 시 스트릭이 끊겼는지(어제 안 줬는지) 체크
 function checkStreakBreak() {
   if (lastWater) {
     const diff = getDL(lastWater); 
-    if (diff < -1) { // 2일 이상 지났으면 끊김!
-      streak = 0;
-      save();
+    if (diff < -1) { streak = 0; save(); }
+  }
+}
+
+function checkDailyEvents() {
+  const today = toS();
+  if (forageDate !== today) {
+    forageItems = [];
+    const num = Math.floor(Math.random() * 3) + 1; 
+    const types = ['🌿', '🍄', '🌰', '🍀'];
+    const W = 300, H = 200; 
+    for(let i=0; i<num; i++) {
+        forageItems.push({
+            type: types[Math.floor(Math.random() * types.length)],
+            x: 30 + Math.random() * 240, 
+            y: H * 0.45 + Math.random() * (H * 0.35) 
+        });
     }
+    forageDate = today;
+    save();
   }
 }
 
@@ -375,8 +581,8 @@ function fetchRealWeather() {
         else if (snowCodes.includes(code)) currentWeather = 'snow';
         else currentWeather = 'clear';
         render(); 
-      } catch(e) { console.log("날씨 정보를 가져오는 데 실패했습니다."); }
-    }, () => { console.log("위치 권한이 거부되어 기본 날씨(맑음)를 유지합니다."); });
+      } catch(e) {}
+    }, () => {});
   }
 }
 
@@ -403,24 +609,13 @@ function checkUnlock(){
 }
 function closeUl(){document.getElementById("ulbg").classList.remove("show");}
 
-// ⭐ 물주기 실행 시 스트릭 계산 및 숙련도(counts) 증가
 function waterNow(id){
-  const today = toS();
-  log[id] = today;
-  counts[id] = (counts[id] || 0) + 1; // 마스터리 증가
-  totalW++; 
-  
-  // 콤보 로직
-  if (!lastWater) {
-    streak = 1;
-  } else {
+  const today = toS(); log[id] = today; counts[id] = (counts[id] || 0) + 1; totalW++; 
+  if (!lastWater) { streak = 1; } else {
     const diff = getDL(lastWater);
-    if (diff === -1) { streak++; } // 어제 주고 오늘 또 줌
-    else if (diff < -1) { streak = 1; } // 끊겼음
-    // diff === 0 (오늘 이미 준 경우) 유지
+    if (diff === -1) { streak++; } else if (diff < -1) { streak = 1; } 
   }
   lastWater = today;
-
   save();checkUnlock();picking=null;render();
   if(streak > 1) toast(`경험치 +1 획득! (🔥 ${streak}일 연속 콤보!)`);
   else toast("경험치 +1 획득!");
@@ -428,14 +623,18 @@ function waterNow(id){
 
 function waterDate(id){
   const v=document.getElementById("di_"+id)?.value;
-  if(v){
-    log[id]=v;
-    counts[id] = (counts[id] || 0) + 1; // 숙련도는 올려줌
-    save(); picking=null; render(); toast(fmtF(v)+" 기록 완료! (경험치/콤보 미적용)"); 
-  }
+  if(v){ log[id]=v; counts[id] = (counts[id] || 0) + 1; save(); picking=null; render(); toast(fmtF(v)+" 기록 완료! (경험치/콤보 미적용)"); }
 }
 
 function togglePick(id){picking=picking===id?null:id;render();}
+
+function deletePlant(id) {
+  if(confirm("정말로 이 식물을 목록에서 지울까요? (물주기 기록도 함께 삭제됩니다)")) {
+    customPlants = customPlants.filter(p => p.id !== id);
+    delete log[id]; delete counts[id];
+    save(); render(); toast("식물을 방생했습니다! 👋");
+  }
+}
 
 async function reqNotif(){
   const r=await Notification.requestPermission();
@@ -448,13 +647,89 @@ function checkPushNotification() {
     const today = toS();
     const lastNotif = localStorage.getItem("pgva_sdv_last_notif");
     if (lastNotif !== today) {
-      const urg = PLANTS.filter(p => { const l = log[p.id]; return !l || getDL(addD(l, p.days)) <= 0; });
+      const allP = [...BASE_PLANTS, ...customPlants];
+      const urg = allP.filter(p => { const l = log[p.id]; return !l || getDL(addD(l, p.days)) <= 0; });
       if (urg.length > 0) {
         new Notification("나의 농장", { body: `목마른 식물이 ${urg.length}개 있어요! 💧 빨리 물조리개를 들어주세요!`, icon: "🌱" });
         localStorage.setItem("pgva_sdv_last_notif", today);
       }
     }
   }
+}
+
+function openAddModal() {
+  document.getElementById('addModal').classList.add('show');
+  document.getElementById('searchInput').value = '';
+  renderDB(); 
+}
+function closeAddModal() {
+  document.getElementById('addModal').classList.remove('show');
+}
+function switchTab(tab) {
+  if (tab === 'db') {
+    document.getElementById('tabBtnDB').classList.add('active');
+    document.getElementById('tabBtnCustom').classList.remove('active');
+    document.getElementById('tab-db').style.display = 'block';
+    document.getElementById('tab-custom').style.display = 'none';
+  } else {
+    document.getElementById('tabBtnDB').classList.remove('active');
+    document.getElementById('tabBtnCustom').classList.add('active');
+    document.getElementById('tab-db').style.display = 'none';
+    document.getElementById('tab-custom').style.display = 'block';
+  }
+}
+
+function renderDB() {
+  const query = document.getElementById('searchInput').value.trim().toLowerCase();
+  const list = document.getElementById('dbResults');
+  list.innerHTML = '';
+  
+  const myIds = [...BASE_PLANTS, ...customPlants].map(p => p.id);
+  const available = PLANT_DB.filter(p => !myIds.includes(p.id));
+  const filtered = available.filter(p => p.name.toLowerCase().includes(query) || p.en.toLowerCase().includes(query));
+  
+  if (filtered.length === 0) {
+    list.innerHTML = `<div style="padding:20px; text-align:center; color:var(--txt2);">검색 결과가 없어요! 😢<br>직접 등록을 이용해보세요.</div>`;
+    return;
+  }
+  
+  filtered.forEach(p => {
+    const el = document.createElement('div');
+    el.className = 'res-item';
+    el.innerHTML = `
+      <div class="res-info">
+        <div class="res-em">${p.emoji}</div>
+        <div class="res-txts">
+          <div class="res-name">${p.name}</div>
+          <div class="res-days">주기: ${p.days}일</div>
+        </div>
+      </div>
+      <button class="res-add-btn" onclick="addFromDB('${p.id}')">입양</button>
+    `;
+    list.appendChild(el);
+  });
+}
+
+function addFromDB(dbId) {
+  const target = PLANT_DB.find(p => p.id === dbId);
+  if (target) {
+    customPlants.push(target);
+    save(); render(); closeAddModal();
+    toast(`${target.name} 입양 완료! 🌱`);
+  }
+}
+
+function addCustom() {
+  const name = document.getElementById('cName').value.trim();
+  const emoji = document.getElementById('cEmoji').value.trim() || "🪴";
+  const days = parseInt(document.getElementById('cDays').value);
+  if (!name || isNaN(days) || days <= 0) { toast("이름과 올바른 주기를 입력해주세요!"); return; }
+  
+  const newPlant = { id: "cust_" + Date.now(), name: name, en: "Custom Plant", days: days, emoji: emoji, tip: "내가 직접 등록한 소중한 식물이에요!" };
+  customPlants.push(newPlant);
+  save(); render(); closeAddModal();
+  document.getElementById('cName').value = ''; document.getElementById('cEmoji').value = ''; document.getElementById('cDays').value = '';
+  toast(`${name} 등록 완료! 🎉`);
 }
 
 function gStage(){
@@ -468,7 +743,6 @@ function gStage(){
   return 0;
 }
 
-// 펭귄 농부 도트
 const P_C={_:null, K:'#0d0d0d', B:'#3a3a3a', W:'#fffbf0', Y:'#f8e040', R:'#f8b0d0', e:'#ffffff', A:'#a8d08d', C:'#5090c0'};
 const P_SPR = ["_____KKKK_____", "____KBBBBK____", "___KBBBBBBK___", "__KBBBBBBBBK__", "_KBBWeKeKWeBK_", "KBBBWWWWWBBBBK", "KBBWKeKWeBBBBK", "KBBBWYWYWBBBBK", "KBBBBBBBBBBBBK", "KBBBBBBBBBBBBK", "_KBBBBBBBBBBK_", "__KBBBBBBBBK__", "___KBBBBBBK___", "____KKKKKK____", "___KYYYYYYK___", "____KKKKKK____"];
 const H_SPR = ["_____eYYYYYYe____", "____eYRRRRRRYe___", "__eeYRRRRRRRRYes_", "_YRRRRRRRRRRRRRYs"];
@@ -505,18 +779,8 @@ function drawChar(ctx, scale=4, isWalking=false){
   }
 }
 
-// ⭐ 귀여운 댕댕이 픽셀 (레벨 15 이상에서 등장)
 const D_C = {_:null, K:'#301b0d', B:'#d48e55', W:'#ffffff'};
-const DOG_SPR = [
-  "___KKK____",
-  "__KBBBK___",
-  "_KKBKWK___",
-  "_KBBBBK_K_",
-  "__KBBKKKBK",
-  "__KBBBBBBK",
-  "___KWBBBWK",
-  "___KK__KK_"
-];
+const DOG_SPR = ["___KKK____", "__KBBBK___", "_KKBKWK___", "_KBBBBK_K_", "__KBBKKKBK", "__KBBBBBBK", "___KWBBBWK", "___KK__KK_"];
 
 function drawDog(ctx, scale) {
   DOG_SPR.forEach((row,ry)=>{
@@ -595,6 +859,13 @@ function drawGardenBg(ctx, W, H, tick) {
     for(let i=0; i<15; i++) { let alpha = Math.max(0.1, Math.abs(Math.sin(tick*0.05 + i))); ctx.fillStyle = `rgba(255, 255, 100, ${alpha})`; ctx.beginPath(); ctx.arc((i * 47 + tick*0.8) % W, H*0.4 + (i * 23 + tick*0.5) % (H*0.6), 2.5, 0, Math.PI*2); ctx.fill(); }
   }
 
+  ctx.font = "18px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  forageItems.forEach(item => {
+      ctx.fillText(item.type, item.x, item.y);
+  });
+
   if (currentWeather === 'rain') { ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; for(let i=0; i<40; i++) { ctx.fillRect((i * 13 + tick * 4) % W, (i * 27 + tick * 14) % H, 1.5, 9); } } 
   else if (currentWeather === 'snow') { ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'; for(let i=0; i<40; i++) { ctx.beginPath(); ctx.arc((i * 17 + Math.sin(tick*0.05 + i)*15) % W, (i * 23 + tick * 3) % H, Math.random()*1.5 + 1.5, 0, Math.PI*2); ctx.fill(); } }
 }
@@ -606,7 +877,6 @@ function renderGardenLoop() {
   
   drawGardenBg(ctx, W, H, walkTick);
 
-  // 캐릭터 걷기
   charX += 0.8 * charDir;
   if(charX > W - 40) charDir = -1;
   if(charX < 20) charDir = 1;
@@ -620,20 +890,25 @@ function renderGardenLoop() {
   drawChar(ctx, scale, true); 
   ctx.restore();
 
-  // ⭐ 댕댕이 걷기 (레벨 15 달성 시)
   if (totalW >= 15) {
-    dogX += 1.2 * dogDir; // 농부보다 조금 빠름
+    dogX += 1.2 * dogDir; 
     if(dogX > W - 30) dogDir = -1;
     if(dogX < 10) dogDir = 1;
-    const dogBounce = Math.abs(Math.sin(walkTick * 0.25)) * 3; // 꼬물꼬물
+    const dogBounce = Math.abs(Math.sin(walkTick * 0.25)) * 3; 
+    const dY = (H * 0.65);
     ctx.save();
-    ctx.translate(dogX, (H * 0.65) - dogBounce); // 농부보다 살짝 아래 배치
+    ctx.translate(dogX, dY - dogBounce); 
     if (dogDir === -1) { ctx.scale(-1, 1); ctx.translate(-10 * scale, 0); }
     drawDog(ctx, scale);
     ctx.restore();
+
+    if (heartAnim > 0) {
+        ctx.font = "16px Arial";
+        ctx.fillText("❤️", dogX, dY - 25 - (40 - heartAnim)*0.5);
+        heartAnim--;
+    }
   }
 
-  // 시간/날씨 오버레이 필터
   const hour = new Date().getHours();
   if (currentWeather === 'rain') { ctx.fillStyle = 'rgba(0, 20, 40, 0.15)'; ctx.fillRect(0, 0, W, H); } 
   else if (currentWeather === 'snow') { ctx.fillStyle = 'rgba(255, 255, 255, 0.1)'; ctx.fillRect(0, 0, W, H); } 
@@ -643,20 +918,55 @@ function renderGardenLoop() {
   animReq = requestAnimationFrame(renderGardenLoop);
 }
 
+document.getElementById('gardenCanvas').addEventListener('click', function(e) {
+    const rect = this.getBoundingClientRect();
+    const scaleX = this.width / rect.width;
+    const scaleY = this.height / rect.height;
+    const cx = (e.clientX - rect.left) * scaleX;
+    const cy = (e.clientY - rect.top) * scaleY;
+
+    if (totalW >= 15) {
+        const dY = (this.height * 0.65);
+        if (Math.hypot(cx - dogX, cy - dY) < 30) {
+            const today = toS();
+            heartAnim = 40; 
+            if (lastDogPet !== today) {
+                lastDogPet = today;
+                totalW++;
+                save(); render(); checkUnlock();
+                toast("댕댕이를 쓰다듬었어요! 🐶 (경험치 +1)");
+            } else {
+                toast("댕댕이가 기분 좋게 꼬리를 흔듭니다! ❤️");
+            }
+            return; 
+        }
+    }
+
+    for (let i = forageItems.length - 1; i >= 0; i--) {
+        const item = forageItems[i];
+        if (Math.hypot(cx - item.x, cy - item.y) < 20) {
+            const t = item.type;
+            forageItems.splice(i, 1); 
+            totalW++;
+            save(); render(); checkUnlock();
+            const msg = (t==='🍄') ? "야생 버섯을 캤어요!" : (t==='🌰') ? "도토리를 주웠어요!" : (t==='🍀') ? "네잎클로버를 찾았어요!" : "잡초를 뽑았어요!";
+            toast(msg + " (경험치 +1)");
+            return; 
+        }
+    }
+});
+
 function render(){
   const d=new Date();const wk=['일','월','화','수','목','금','토'];
   document.getElementById('hDate').textContent=`${d.getMonth()+1}월 ${d.getDate()}일 (${wk[d.getDay()]})`;
   
-  // ⭐ 스트릭(콤보) 표시
   const streakEl = document.getElementById('hStreak');
-  if (streak > 0) {
-    streakEl.style.display = 'inline-flex';
-    streakEl.textContent = `🔥 ${streak}일 연속`;
-  } else {
-    streakEl.style.display = 'none';
-  }
+  if (streak > 0) { streakEl.style.display = 'inline-flex'; streakEl.textContent = `🔥 ${streak}일 연속`; } 
+  else { streakEl.style.display = 'none'; }
 
-  const urg=PLANTS.filter(p=>{const l=log[p.id];return!l||getDL(addD(l,p.days))<=0;});
+  const ALL_PLANTS = [...BASE_PLANTS, ...customPlants];
+
+  const urg=ALL_PLANTS.filter(p=>{const l=log[p.id];return!l||getDL(addD(l,p.days))<=0;});
   const tg=document.getElementById('hTag');
   
   if(urg.length){tg.style.borderColor='var(--red1)'; tg.style.color='var(--red1)'; tg.textContent=`! ${urg.length}개 필요 !`;}
@@ -690,7 +1000,7 @@ function render(){
   const nw=document.getElementById('notifWrap');
   nw.innerHTML=('Notification'in window&&Notification.permission==='default')?`<div class="sdv-box" style="padding:10px; display:flex; align-items:center; gap:8px;"><p style="font-size:14px; flex:1;">물주기 알림 설정</p><button class="btnw bw-ok" style="height:32px; font-size:14px;" onclick="reqNotif()">켜기</button></div>`:'';
   
-  const sorted=[...PLANTS].sort((a,b)=>{const da=log[a.id]?getDL(addD(log[a.id],a.days)):-999;const db=log[b.id]?getDL(addD(log[b.id],b.days)):-999;return da-db;});
+  const sorted=[...ALL_PLANTS].sort((a,b)=>{const da=log[a.id]?getDL(addD(log[a.id],a.days)):-999;const db=log[b.id]?getDL(addD(log[b.id],b.days)):-999;return da-db;});
   const list=document.getElementById('plantList');list.innerHTML='';
   
   sorted.forEach(p=>{
@@ -701,22 +1011,24 @@ function render(){
     const tagT=isN?'기록없음':isL?`+${Math.abs(dl)}일 지남`:dl===0?'오늘 물주기!':dl+'일 남음';
     const btnT=isN?'물조리개 쓰기':isL?'지금 물주기':'물주기 완료';
     
-    // ⭐ 숙련도 (마스터리) 로직
     const count = counts[p.id] || 0;
-    let badge = '';
-    let mClass = '';
-    if (count >= 10) { badge = '👑'; mClass = 'chip-mastery'; } // 10번 이상 왕관
-    else if (count >= 5) { badge = '🥈'; } // 5번 이상 은메달
+    let badge = ''; let mClass = '';
+    if (count >= 10) { badge = '👑'; mClass = 'chip-mastery'; } 
+    else if (count >= 5) { badge = '🥈'; } 
 
     let chips=`<span class="chip">주기: ${p.days}일</span>`;
-    if(count > 0) chips+=`<span class="chip ${mClass}">누적 물주기: ${count}회</span>`; // 누적 횟수 표시
+    if(count > 0) chips+=`<span class="chip ${mClass}">누적 물주기: ${count}회</span>`; 
     if(last) chips+=`<span class="chip">마지막: ${fmt(last)}</span>`;
     
+    const isCustom = customPlants.some(cp => cp.id === p.id);
+    const delBtnHtml = isCustom ? `<button class="del-btn" onclick="deletePlant('${p.id}')" title="이 식물 방생하기">✖</button>` : '';
+
     const pgH=last?`<div class="pg-wrap"><div class="pg-labels"><span>작물 상태</span><span>${Math.round(prog)}%</span></div><div class="pg-track"><div class="pg-fill pgf-${tp==='none'?'ok':tp}" style="width:${prog}%"></div></div></div>`:'';
     const actH=isPick?`<div class="pkbox"><div class="pk-lbl">날짜 선택</div><input id="di_${p.id}" class="pk-in" type="date" max="${toS()}" value="${last||toS()}"><div class="pk-btns"><button class="pk-ok" onclick="waterDate('${p.id}')">확인</button><button class="pk-no" onclick="togglePick('${p.id}')">취소</button></div></div>`:`<div class="brow"><button class="btnw bw-${tp==='none'?'none':tp}" onclick="waterNow('${p.id}')">${btnT}</button><button class="btn-cal" onclick="togglePick('${p.id}')">📅</button></div>`;
     
     const card=document.createElement('div');card.className=`pcard sdv-box`;
     card.innerHTML=`
+      ${delBtnHtml}
       <div class="pc-top">
         <div class="pc-icon">${p.emoji} <div class="pc-mastery-badge">${badge}</div></div>
         <div class="pc-names"><div class="pc-name">${p.name}</div><div class="pc-en">${p.en}</div></div>
