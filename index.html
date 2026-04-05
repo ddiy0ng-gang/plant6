@@ -516,8 +516,8 @@ let forageDate = null;
 let forageItems = []; 
 let heartAnim = 0; 
 
-const toS=()=>new Date().toISOString().split("T")[0];
-const addD=(s,n)=>{const d=new Date(s);d.setDate(d.getDate()+n);return d.toISOString().split("T")[0];};
+const toS=()=>{const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+const addD=(s,n)=>{const d=new Date(s+'T00:00:00');d.setDate(d.getDate()+n);return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
 const getDL=s=>{const a=new Date();a.setHours(0,0,0,0);const b=new Date(s);b.setHours(0,0,0,0);return Math.round((b-a)/864e5);};
 const fmt=s=>{if(!s)return"";const d=new Date(s);return`${d.getMonth()+1}/${d.getDate()}`;};
 const fmtF=s=>{if(!s)return"";const d=new Date(s);return`${d.getMonth()+1}월 ${d.getDate()}일`;};
@@ -1008,7 +1008,7 @@ function render(){
     const isL=dl!==null&&dl<=0,isS=dl!==null&&dl>0&&dl<=2,isN=!last;
     const prog=last?Math.max(0,Math.min(100,((p.days-(dl??0))/p.days)*100)):0;
     const isPick=picking===p.id,tp=isL?'late':isS?'soon':isN?'none':'ok';
-    const tagT=isN?'기록없음':isL?`+${Math.abs(dl)}일 지남`:dl===0?'오늘 물주기!':dl+'일 남음';
+    const tagT=isN?'기록없음':dl===0?'오늘 물주기!':isL?`+${Math.abs(dl)}일 지남`:dl+'일 남음';
     const btnT=isN?'물조리개 쓰기':isL?'지금 물주기':'물주기 완료';
     
     const count = counts[p.id] || 0;
